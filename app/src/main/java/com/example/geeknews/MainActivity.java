@@ -1,25 +1,28 @@
 package com.example.geeknews;
 
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import com.example.geeknews.beans.zhihu.DailyListBean;
+import com.example.geeknews.beas.activity.BaseActivity;
+import com.example.geeknews.presenter.ZhihuPresenter;
+import com.example.geeknews.view.ZhihuView;
+
+public class MainActivity extends BaseActivity<ZhihuView,ZhihuPresenter<ZhihuView>>
+        implements NavigationView.OnNavigationItemSelectedListener,ZhihuView {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected void initData() {
+        presenter.getDailyListBean();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -34,12 +37,17 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-            this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected int createLayoutId() {
+        return R.layout.activity_main;
     }
 
     @Override
@@ -101,5 +109,30 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void showProgressbar() {
+
+    }
+
+    @Override
+    public void hideProgressbar() {
+
+    }
+
+    @Override
+    public void showError(String error) {
+
+    }
+
+    @Override
+    public void show(DailyListBean dailyListBean) {
+        Log.e("11111111",dailyListBean.getStories().get(1).getTitle());
+    }
+
+    @Override
+    protected ZhihuPresenter<ZhihuView> createPresenter() {
+        return new ZhihuPresenter<>();
     }
 }
