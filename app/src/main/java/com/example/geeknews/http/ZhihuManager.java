@@ -1,6 +1,6 @@
 package com.example.geeknews.http;
 
-import com.example.geeknews.beans.zhihu.DailyListBean;
+import com.example.geeknews.api.ZhihuApi;
 
 import io.reactivex.Observable;
 
@@ -23,8 +23,13 @@ public class ZhihuManager {
         return sZhihuServer;
     }
 
-    public Observable<DailyListBean> getDailyListBean() {
-        return sZhihuServer.getDailyList();
+    public<T> Observable<T> getZhihu(ZhihuApi zhihuApi) {
+        switch (zhihuApi) {
+            case ZUIXINRIBAO:
+                sZhihuServer.getDailyList();
+                break;
+        }
+        return null;
     }
 
 }

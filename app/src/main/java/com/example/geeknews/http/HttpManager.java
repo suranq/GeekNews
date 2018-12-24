@@ -23,6 +23,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Created by 马明祥 on 2018/12/21.
@@ -57,24 +58,21 @@ public class HttpManager {
     public OkHttpClient getOkHttpClient() {
         //缓存文件定义：缓存到当前项目的包路径下
         Cache cache = new Cache(new File(Myapp.getMyapp().getCacheDir(), "Cache"), 1024 * 1024 * 10);
-        Log.e("22222",cache.toString());
+        Log.e("22222", cache.toString());
         //网络请求的Log日志输出
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         MyCacheinterceptor myCacheinterceptor = new MyCacheinterceptor();
-        if (cache != null) {
-            return new OkHttpClient.Builder()
-                    .connectTimeout(5, TimeUnit.SECONDS)
-                    .readTimeout(5, TimeUnit.SECONDS)
-                    .writeTimeout(5, TimeUnit.SECONDS)
-                    .cache(cache)
-                    .addInterceptor(httpLoggingInterceptor)
-                    .addInterceptor(myCacheinterceptor)
-                    .addNetworkInterceptor(myCacheinterceptor)
-                    .retryOnConnectionFailure(true)
-                    .build();
-        }
-        return null;
+        return new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
+                .cache(cache)
+                .addInterceptor(httpLoggingInterceptor)
+                .addInterceptor(myCacheinterceptor)
+                .addNetworkInterceptor(myCacheinterceptor)
+                .retryOnConnectionFailure(true)
+                .build();
     }
 
     private class MyCacheinterceptor implements Interceptor {

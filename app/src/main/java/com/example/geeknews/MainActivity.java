@@ -1,48 +1,61 @@
 package com.example.geeknews;
 
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.example.geeknews.beans.zhihu.DailyListBean;
-import com.example.geeknews.beas.activity.BaseActivity;
-import com.example.geeknews.presenter.ZhihuPresenter;
-import com.example.geeknews.view.ZhihuView;
+import com.example.geeknews.beas.activity.SimpleActivity;
+import com.example.geeknews.fragments.GanhuoFragment;
+import com.example.geeknews.fragments.ShujuFragment;
+import com.example.geeknews.fragments.V2ExFragment;
+import com.example.geeknews.fragments.WeixinFragment;
+import com.example.geeknews.fragments.ZhihuFragment;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
-public class MainActivity extends BaseActivity<ZhihuView,ZhihuPresenter<ZhihuView>>
-        implements NavigationView.OnNavigationItemSelectedListener,ZhihuView {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+
+public class MainActivity extends SimpleActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    @BindView(R.id.view_search)
+    MaterialSearchView mViewSearch;
+    private MenuItem searchMenuItem;
+    private MenuItem mMenuItem;
+    private Toolbar mToolbar;
 
     @Override
     protected void initData() {
-        presenter.getDailyListBean();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitle("知乎日报");
+        setSupportActionBar(mToolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, mToolbar, R.string.app_name, R.string.drawer_group_options);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        mMenuItem = navigationView.getMenu().findItem(R.id.drawer_zhihu);
+        mMenuItem.setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fl_content, new ZhihuFragment());
+        fragmentTransaction.commit();
+
     }
 
     @Override
@@ -64,6 +77,17 @@ public class MainActivity extends BaseActivity<ZhihuView,ZhihuPresenter<ZhihuVie
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.action_settings);
+
+        if (mMenuItem.getItemId() == R.id.drawer_zhihu) {
+            item.setCheckable(true);
+        } else {
+            item.setVisible(false);
+        }
+
+        //关联toolbar的搜索按钮
+        mViewSearch.setMenuItem(item);
+        searchMenuItem = item;
         return true;
     }
 
@@ -87,52 +111,54 @@ public class MainActivity extends BaseActivity<ZhihuView,ZhihuPresenter<ZhihuVie
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_zhihu) {
+        //fragment事务管理器
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (id == R.id.drawer_zhihu) {
             // Handle the camera action
-        } else if (id == R.id.nav_weixin) {
+            fragmentTransaction.replace(R.id.fl_content, new ZhihuFragment());
+            searchMenuItem.setVisible(false);
+            mToolbar.setTitle("知乎日报");
+        } else if (id == R.id.wednesday) {
+            fragmentTransaction.replace(R.id.fl_content, new WeixinFragment());
+            searchMenuItem.setVisible(true);
+            mToolbar.setTitle("微信精选");
+        } else if (id == R.id.drawer_gank) {
+            fragmentTransaction.replace(R.id.fl_content, new GanhuoFragment());
+            searchMenuItem.setVisible(true);
+            mToolbar.setTitle("干货集中营");
+        } else if (id == R.id.drawer_gold) {
+            fragmentTransaction.replace(R.id.fl_content, new ShujuFragment());
+            searchMenuItem.setVisible(false);
+            mToolbar.setTitle("数据智汇");
+        } else if (id == R.id.drawer_vtex) {
+            fragmentTransaction.replace(R.id.fl_content, new V2ExFragment());
+            searchMenuItem.setVisible(false);
+            mToolbar.setTitle("V2EX");
+        } else if (id == R.id.drawer_like) {
 
-        } else if (id == R.id.nav_ganhuo) {
+        } else if (id == R.id.drawer_setting) {
 
-        } else if (id == R.id.nav_xitu) {
-
-        } else if (id == R.id.nav_vex) {
-
-        } else if (id == R.id.nav_shou) {
-
-        }else if (id == R.id.nav_she){
-
-        }else if (id == R.id.nav_guan){
+        } else if (id == R.id.drawer_about) {
 
         }
 
+        fragmentTransaction.commit();
+        if (mMenuItem != null) {
+            mMenuItem.setChecked(false);
+        }
+
+        item.setChecked(true);
+        mMenuItem = item;
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
-    public void showProgressbar() {
-
-    }
-
-    @Override
-    public void hideProgressbar() {
-
-    }
-
-    @Override
-    public void showError(String error) {
-
-    }
-
-    @Override
-    public void show(DailyListBean dailyListBean) {
-        Log.e("11111111",dailyListBean.getStories().get(1).getTitle());
-    }
-
-    @Override
-    protected ZhihuPresenter<ZhihuView> createPresenter() {
-        return new ZhihuPresenter<>();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }
