@@ -1,4 +1,4 @@
-package com.example.geeknews.adapters;
+package com.example.geeknews.adapters.zhihu;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

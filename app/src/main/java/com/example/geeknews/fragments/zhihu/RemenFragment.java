@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.geeknews.R;
-import com.example.geeknews.adapters.MyRemenAdapter;
+import com.example.geeknews.adapters.zhihu.MyRemenAdapter;
 import com.example.geeknews.api.ZhihuApi;
 import com.example.geeknews.beans.zhihu.HotListBean;
 import com.example.geeknews.beas.fragment.BaseFragment;

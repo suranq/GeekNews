@@ -1,12 +1,9 @@
 package com.example.geeknews.mdolue;
 
 import com.example.geeknews.api.ZhihuApi;
-import com.example.geeknews.beans.zhihu.DailyListBean;
-import com.example.geeknews.beans.zhihu.HotListBean;
-import com.example.geeknews.beans.zhihu.SectionListBean;
 import com.example.geeknews.beas.moudle.HttpFinishCallback;
 import com.example.geeknews.http.BaseObserver;
-import com.example.geeknews.http.ZhihuManager;
+import com.example.geeknews.http.zhihu.ZhihuManager;
 import com.example.geeknews.utils.RxUtils;
 
 /**

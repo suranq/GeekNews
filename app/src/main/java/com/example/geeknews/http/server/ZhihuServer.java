@@ -1,4 +1,4 @@
-package com.example.geeknews.http;
+package com.example.geeknews.http.server;
 
 import com.example.geeknews.beans.zhihu.DailyListBean;
 import com.example.geeknews.beans.zhihu.HotListBean;

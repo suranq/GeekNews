@@ -1,6 +1,8 @@
-package com.example.geeknews.http;
+package com.example.geeknews.http.zhihu;
 
 import com.example.geeknews.api.ZhihuApi;
+import com.example.geeknews.http.HttpManager;
+import com.example.geeknews.http.server.ZhihuServer;
 
 import io.reactivex.Observable;
 

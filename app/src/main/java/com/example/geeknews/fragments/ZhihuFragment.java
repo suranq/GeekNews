@@ -76,7 +76,7 @@ public class ZhihuFragment extends SimpleFragment {
         mVp.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTab));
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(new RibaoFragment());
-        fragments.add(new WeixinFragment());
+        fragments.add(new ZhutiFragment());
         fragments.add(new ZhuanlanFragment());
         fragments.add(new RemenFragment());
         mVp.setAdapter(new MyFragmentAdapter(getChildFragmentManager(),fragments));
