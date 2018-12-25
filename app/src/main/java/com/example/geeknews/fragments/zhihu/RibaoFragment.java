@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.geeknews.R;
 import com.example.geeknews.adapters.MyXrlvAdapter;
@@ -31,7 +34,6 @@ import butterknife.Unbinder;
  * A simple {@link Fragment} subclass.
  */
 public class RibaoFragment extends BaseFragment<ZhihuView<DailyListBean>, ZhihuPresenter<ZhihuView<DailyListBean>>> implements ZhihuView<DailyListBean> {
-
 
     @BindView(R.id.vp)
     ViewPager mVp;
@@ -64,12 +66,24 @@ public class RibaoFragment extends BaseFragment<ZhihuView<DailyListBean>, ZhihuP
         mXrlv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
 
         mMyXrlvAdapter = new MyXrlvAdapter(mData,getContext());
+        mXrlv.setAdapter(mMyXrlvAdapter);
 
     }
 
     @Override
     public void showZhihu(DailyListBean dailyListBean) {
-        Log.e("111111111", dailyListBean.getStories().get(1).getTitle());
+//        Log.e("111111111", dailyListBean.getStories().get(1).getTitle());
+        mMyXrlvAdapter.setData(dailyListBean.getTop_stories());
+    }
+
+    @Override
+    public void showProgressbar() {
+
+    }
+
+    @Override
+    public void hideProgressbar() {
+
     }
 
     @Override

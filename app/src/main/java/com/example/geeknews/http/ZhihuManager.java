@@ -23,10 +23,16 @@ public class ZhihuManager {
         return sZhihuServer;
     }
 
-    public<T> Observable<T> getZhihu(ZhihuApi zhihuApi) {
+    public Observable<String> getZhihu(ZhihuApi zhihuApi) {
         switch (zhihuApi) {
             case ZUIXINRIBAO:
                 sZhihuServer.getDailyList();
+                break;
+            case ZHUANLANRIBAO:
+                sZhihuServer.getSectionList();
+                break;
+            case REMENRIBAO:
+                sZhihuServer.getHotList();
                 break;
         }
         return null;

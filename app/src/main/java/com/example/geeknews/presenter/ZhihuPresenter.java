@@ -2,6 +2,8 @@ package com.example.geeknews.presenter;
 
 import com.example.geeknews.api.ZhihuApi;
 import com.example.geeknews.beans.zhihu.DailyListBean;
+import com.example.geeknews.beans.zhihu.HotListBean;
+import com.example.geeknews.beans.zhihu.SectionListBean;
 import com.example.geeknews.beas.presenter.BasePresenter;
 import com.example.geeknews.beas.presenter.IBasePresenter;
 import com.example.geeknews.mdolue.ZhihuModlue;
@@ -40,10 +42,23 @@ public class ZhihuPresenter<V extends ZhihuView> extends IBasePresenter<V> imple
 
     @Override
     public void setZhihu(Object o, ZhihuApi zhihuApi) {
-        switch (zhihuApi) {
-            case ZUIXINRIBAO:
-                mView.showZhihu(o);
-                break;
+        String data = (String) o;
+        Gson gson = new Gson();
+        if (mView!= null){
+            switch (zhihuApi) {
+                case ZUIXINRIBAO:
+                    DailyListBean dailyListBean = gson.fromJson(data, DailyListBean.class);
+                    mView.showZhihu(dailyListBean);
+                    break;
+                case ZHUANLANRIBAO:
+                    SectionListBean sectionListBean = gson.fromJson(data, SectionListBean.class);
+                    mView.showZhihu(sectionListBean);
+                    break;
+                case REMENRIBAO:
+                    HotListBean hotListBean = gson.fromJson(data, HotListBean.class);
+                    mView.showZhihu(hotListBean);
+                    break;
+            }
         }
     }
 }

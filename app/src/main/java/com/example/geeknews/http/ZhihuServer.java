@@ -1,6 +1,8 @@
 package com.example.geeknews.http;
 
 import com.example.geeknews.beans.zhihu.DailyListBean;
+import com.example.geeknews.beans.zhihu.HotListBean;
+import com.example.geeknews.beans.zhihu.SectionListBean;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
@@ -23,7 +25,7 @@ public interface ZhihuServer {
      * 最新日报DailyListBean
      */
     @GET("news/latest")
-    Observable<DailyListBean> getDailyList();
+    Observable<String> getDailyList();
 
     /**
      * 往期日报DailyBeforeListBean

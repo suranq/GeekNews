@@ -119,7 +119,7 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
             fragmentTransaction.replace(R.id.fl_content, new ZhihuFragment());
             searchMenuItem.setVisible(false);
             mToolbar.setTitle("知乎日报");
-        } else if (id == R.id.wednesday) {
+        } else if (id == R.id.drawer_wechat) {
             fragmentTransaction.replace(R.id.fl_content, new WeixinFragment());
             searchMenuItem.setVisible(true);
             mToolbar.setTitle("微信精选");

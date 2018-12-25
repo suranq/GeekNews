@@ -2,6 +2,8 @@ package com.example.geeknews.mdolue;
 
 import com.example.geeknews.api.ZhihuApi;
 import com.example.geeknews.beans.zhihu.DailyListBean;
+import com.example.geeknews.beans.zhihu.HotListBean;
+import com.example.geeknews.beans.zhihu.SectionListBean;
 import com.example.geeknews.beas.moudle.HttpFinishCallback;
 import com.example.geeknews.http.BaseObserver;
 import com.example.geeknews.http.ZhihuManager;
@@ -23,9 +25,25 @@ public class ZhihuModlue {
         zhihuCallback.setShowProgressbar();
         switch (zhihuApi) {
             case ZUIXINRIBAO:
-                ZhihuManager.getZhihuManager().getDailyList().compose(RxUtils.<DailyListBean>rxObserableSchedulerHelper()).subscribe(new BaseObserver<DailyListBean>(zhihuCallback) {
+                ZhihuManager.getZhihuManager().getDailyList().compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(zhihuCallback) {
                     @Override
-                    public void onNext(DailyListBean value) {
+                    public void onNext(String value) {
+                        zhihuCallback.setZhihu(value,zhihuApi);
+                    }
+                });
+                break;
+            case ZHUANLANRIBAO:
+                ZhihuManager.getZhihuManager().getSectionList().compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(zhihuCallback) {
+                    @Override
+                    public void onNext(String value) {
+                        zhihuCallback.setZhihu(value,zhihuApi);
+                    }
+                });
+                break;
+            case REMENRIBAO:
+                ZhihuManager.getZhihuManager().getHotList().compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(zhihuCallback) {
+                    @Override
+                    public void onNext(String value) {
                         zhihuCallback.setZhihu(value,zhihuApi);
                     }
                 });
