@@ -2,26 +2,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.example.geeknews.fragments.zhihu.RibaoFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <com.youth.banner.Banner
-        android:id="@+id/banner"
-        android:layout_weight="3"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>
-
-    <TextView
-        android:text="今日热闻"
-        android:layout_weight="1"
-        android:layout_marginLeft="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp" />
-
-    <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/xrlv"
-        android:layout_weight="4"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"/>
+        android:layout_height="match_parent">
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/xrlv"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_calender"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="20dp"
+            app:borderWidth="0dp"
+            android:background="@color/fab_bg"
+            android:src="@mipmap/ic_fab_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 </LinearLayout>

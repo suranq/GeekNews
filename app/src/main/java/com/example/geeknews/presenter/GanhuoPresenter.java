@@ -46,6 +46,10 @@ public class GanhuoPresenter<V extends GanhuoView> extends IBasePresenter<V> imp
                     GanAndroid ganAndroid = gson.fromJson(data, GanAndroid.class);
                     mView.show(ganAndroid);
                     break;
+                case SUIJIMEIZI:
+                    GanAndroid ganAndroid1 = gson.fromJson(data, GanAndroid.class);
+                    mView.show(ganAndroid1);
+                    break;
             }
         }
     }

@@ -25,7 +25,7 @@ public class WeixinPresenter<V extends WeixinView>extends IBasePresenter<V> impl
 
     @Override
     public void setShowProgressbar() {
-        mView.showProgressbar();
+
     }
 
     @Override

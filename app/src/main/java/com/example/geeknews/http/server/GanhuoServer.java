@@ -27,11 +27,11 @@ public interface GanhuoServer {
     Observable<String>getMeizi(@Path("page")int page);
 
 //
-//    /**
-//     * 随机妹纸图
-//     */
-//    @GET("random/data/福利/{num}")
-//    Flowable<GankHttpResponse<List<GankItemBean>>> getRandomGirl(@Path("num") int num);
+    /**
+     * 随机妹纸图
+     */
+    @GET("random/data/福利/1")
+    Observable<String>getSui();
 //
 //    /**
 //     * 搜索

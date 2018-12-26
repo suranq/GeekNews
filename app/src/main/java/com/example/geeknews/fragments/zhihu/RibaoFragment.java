@@ -38,8 +38,8 @@ public class RibaoFragment extends BaseFragment<ZhihuView<DailyListBean>, ZhihuP
     @BindView(R.id.xrlv)
     XRecyclerView mXrlv;
     Unbinder unbinder;
-    @BindView(R.id.banner)
-    Banner mBanner;
+//    @BindView(R.id.banner)
+//    Banner mBanner;
 
     private List<DailyListBean.TopStoriesBean> mData = new ArrayList<>();
     private MyXrlvAdapter mMyXrlvAdapter;
@@ -84,27 +84,27 @@ public class RibaoFragment extends BaseFragment<ZhihuView<DailyListBean>, ZhihuP
     public void showZhihu(DailyListBean dailyListBean) {
         Log.e("111111111", dailyListBean.getStories().get(1).getTitle());
         mDailyListBean = dailyListBean;
-        mMyXrlvAdapter.setData(dailyListBean.getTop_stories());
+        mMyXrlvAdapter.setData(dailyListBean);
 
-        ArrayList<String> iamge = new ArrayList<>();
-        List<DailyListBean.StoriesBean> top_stories = mDailyListBean.getStories();
-        for (int i = 0; i < top_stories.size(); i++) {
-            List<String> images = top_stories.get(i).getImages();
-            String s = images.get(0);
-            iamge.add(s);
-        }
-
-        mBanner.setImages(iamge).setImageLoader(new ImageLoader()).start();
+//        ArrayList<String> iamge = new ArrayList<>();
+//        List<DailyListBean.StoriesBean> top_stories = mDailyListBean.getStories();
+//        for (int i = 0; i < top_stories.size(); i++) {
+//            List<String> images = top_stories.get(i).getImages();
+//            String s = images.get(0);
+//            iamge.add(s);
+//        }
+//
+//        mBanner.setImages(iamge).setImageLoader(new ImageLoader()).start();
     }
 
     @Override
     public void showProgressbar() {
-
+        presenter.setShowProgressbar();
     }
 
     @Override
     public void hideProgressbar() {
-
+        presenter.setHideProgressbar();
     }
 
     @Override

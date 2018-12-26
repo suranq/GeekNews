@@ -107,12 +107,12 @@ public class WeixinFragment extends BaseFragment<WeixinView<WeiXinBean>,WeixinPr
 
     @Override
     public void showProgressbar() {
-        presenter.setShowProgressbar();
+
     }
 
     @Override
     public void hideProgressbar() {
-        presenter.setHideProgressbar();
+
     }
 
     @Override

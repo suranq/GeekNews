@@ -28,6 +28,14 @@ public class GanhuoModlue {
                     }
                 });
                 break;
+            case SUIJIMEIZI:
+                GanhuoManager.getGanhuoServer().getSui().compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(ganhuoCallback) {
+                    @Override
+                    public void onNext(String value) {
+                        ganhuoCallback.setGanhuo(value,ganhuoApi);
+                    }
+                });
+                break;
         }
     }
 

@@ -30,6 +30,9 @@ public class GanhuoManager {
             case JISHU:
                 sGanhuoServer.getJishu(tech,page);
                 break;
+            case SUIJIMEIZI:
+                sGanhuoServer.getSui();
+                break;
         }
         return null;
     }

@@ -5,17 +5,23 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.geeknews.R;
 import com.example.geeknews.adapters.MyFragmentAdapter;
+import com.example.geeknews.api.GanhuoApi;
+import com.example.geeknews.beans.zhihu.ganhuo.GanAndroid;
+import com.example.geeknews.beas.fragment.BaseFragment;
 import com.example.geeknews.beas.fragment.SimpleFragment;
 import com.example.geeknews.fragments.ganhuo.AndroidFragment;
 import com.example.geeknews.fragments.ganhuo.FuliFragment;
 import com.example.geeknews.fragments.ganhuo.IOSFragment;
 import com.example.geeknews.fragments.ganhuo.QianduanFragment;
+import com.example.geeknews.presenter.GanhuoPresenter;
+import com.example.geeknews.view.GanhuoView;
 
 import java.util.ArrayList;
 
@@ -26,7 +32,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GanhuoFragment extends SimpleFragment {
+public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPresenter<GanhuoView<GanAndroid>>> implements GanhuoView<GanAndroid>{
 
 
     @BindView(R.id.tab)
@@ -46,7 +52,7 @@ public class GanhuoFragment extends SimpleFragment {
 
     @Override
     protected void load() {
-
+        presenter.getGanhuo("福利",1, GanhuoApi.JISHU);
     }
 
     @Override
@@ -89,8 +95,33 @@ public class GanhuoFragment extends SimpleFragment {
     }
 
     @Override
+    protected GanhuoPresenter<GanhuoView<GanAndroid>> createPresenter() {
+        return new GanhuoPresenter<>();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void showProgressbar() {
+
+    }
+
+    @Override
+    public void hideProgressbar() {
+
+    }
+
+    @Override
+    public void show(GanAndroid ganAndroid) {
+        Log.e("666666",ganAndroid.getResults().get(0).getUrl());
+    }
+
+    @Override
+    public void showError(String error) {
+
     }
 }
