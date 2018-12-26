@@ -23,6 +23,8 @@ import com.example.geeknews.fragments.ganhuo.QianduanFragment;
 import com.example.geeknews.presenter.GanhuoPresenter;
 import com.example.geeknews.view.GanhuoView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -40,6 +42,7 @@ public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPr
     @BindView(R.id.vp)
     ViewPager mVp;
     Unbinder unbinder;
+    private AndroidFragment mAndroidFragment;
 
     public GanhuoFragment() {
         // Required empty public constructor
@@ -52,11 +55,12 @@ public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPr
 
     @Override
     protected void load() {
-        presenter.getGanhuo("福利",1, GanhuoApi.JISHU);
+
     }
 
     @Override
     protected void initData() {
+        presenter.getGanhuo("福利",1, GanhuoApi.JISHU);
         mTab.addTab(mTab.newTab().setText("ANDROID"));
         mTab.addTab(mTab.newTab().setText("IOS"));
         mTab.addTab(mTab.newTab().setText("前端"));
@@ -79,7 +83,8 @@ public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPr
         });
         mVp.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTab));
         ArrayList<Fragment> fragments = new ArrayList<>();
-        fragments.add(new AndroidFragment());
+        mAndroidFragment = new AndroidFragment();
+        fragments.add(mAndroidFragment);
         fragments.add(new IOSFragment());
         fragments.add(new QianduanFragment());
         fragments.add(new FuliFragment());
@@ -118,6 +123,12 @@ public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPr
     @Override
     public void show(GanAndroid ganAndroid) {
         Log.e("666666",ganAndroid.getResults().get(0).getUrl());
+//        Bundle bundle = new Bundle();
+//        bundle.putString("meizi",ganAndroid.getResults().get(0).getUrl());
+//        mAndroidFragment.setArguments(bundle);
+
+//        String url = ganAndroid.getResults().get(0).getUrl();
+//        EventBus.getDefault().postSticky(url);
     }
 
     @Override

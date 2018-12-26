@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
 import com.example.geeknews.adapters.ganhuo.MyAndroidAdapter;
 import com.example.geeknews.api.GanhuoApi;
@@ -22,6 +23,10 @@ import com.example.geeknews.beas.fragment.BaseFragment;
 import com.example.geeknews.presenter.GanhuoPresenter;
 import com.example.geeknews.view.GanhuoView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +58,8 @@ public class AndroidFragment extends BaseFragment<GanhuoView<GanAndroid>, Ganhuo
     private int mPage = 1;
     private String mTech = "Android";
     private List<GanAndroid.ResultsBean> mData = new ArrayList<>();
+    private String ganAndroid;
+    private boolean isMeizi = false;
 
     public AndroidFragment() {
         // Required empty public constructor
@@ -70,6 +77,7 @@ public class AndroidFragment extends BaseFragment<GanhuoView<GanAndroid>, Ganhuo
 
     @Override
     protected void initData() {
+//        EventBus.getDefault().register(this);
         presenter.getGanhuo(mTech,mPage, GanhuoApi.JISHU);
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mXrlv.setLayoutManager(manager);
@@ -78,7 +86,24 @@ public class AndroidFragment extends BaseFragment<GanhuoView<GanAndroid>, Ganhuo
         mMyAndroidAdapter = new MyAndroidAdapter(mData,getContext());
         mXrlv.setAdapter(mMyAndroidAdapter);
         mXrlv.setLoadingListener(this);
+
+//        Bundle arguments = getArguments();
+//        String meizi = arguments.getString("meizi");
+//        Glide.with(getContext()).load(meizi).into(mIvTechBlur);
+//        Log.e("77777",ganAndroid);
+
     }
+//    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+//    public void getData(String url){
+//        this.ganAndroid = url;
+//    }
+//
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        // 注销订阅者
+//        EventBus.getDefault().unregister(this);
+//    }
 
     @Override
     public void showProgressbar() {

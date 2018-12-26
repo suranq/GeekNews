@@ -1,6 +1,7 @@
 package com.example.geeknews.fragments.zhihu;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.geeknews.R;
+import com.example.geeknews.activitys.weixin.zhihu.ZhihuActivity;
 import com.example.geeknews.adapters.zhihu.MyRemenAdapter;
 import com.example.geeknews.api.ZhihuApi;
 import com.example.geeknews.beans.zhihu.HotListBean;
@@ -54,13 +56,23 @@ public class RemenFragment extends BaseFragment<ZhihuView<HotListBean>, ZhihuPre
 
     @Override
     protected void initData() {
-        presenter.getZhihu(ZhihuApi.REMENRIBAO);
+        presenter.getZhihu(0,ZhihuApi.REMENRIBAO);
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mXrlv.setLayoutManager(manager);
         mXrlv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
 
         mMyRemenAdapter = new MyRemenAdapter(mData,getContext());
         mXrlv.setAdapter(mMyRemenAdapter);
+
+        mMyRemenAdapter.setOnItemListener(new MyRemenAdapter.OnItemListener() {
+            @Override
+            public void OnItemListener(HotListBean.RecentBean recentBean) {
+                Intent intent = new Intent(getContext(), ZhihuActivity.class);
+                intent.putExtra("xiangqing",recentBean.getNews_id());
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override

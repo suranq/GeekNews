@@ -2,6 +2,7 @@ package com.example.geeknews.fragments.zhihu;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
+import com.example.geeknews.activitys.weixin.zhihu.ZhihuActivity;
 import com.example.geeknews.adapters.zhihu.MyXrlvAdapter;
 import com.example.geeknews.api.ZhihuApi;
 import com.example.geeknews.beans.zhihu.DailyListBean;
@@ -43,7 +45,8 @@ public class RibaoFragment extends BaseFragment<ZhihuView<DailyListBean>, ZhihuP
 
     private List<DailyListBean.TopStoriesBean> mData = new ArrayList<>();
     private MyXrlvAdapter mMyXrlvAdapter;
-    private DailyListBean mDailyListBean;
+    private List<DailyListBean.StoriesBean> mStoriesBeans = new ArrayList<>();
+    private List<DailyListBean.StoriesBean> mStories;
 
     public RibaoFragment() {
         // Required empty public constructor
@@ -61,7 +64,7 @@ public class RibaoFragment extends BaseFragment<ZhihuView<DailyListBean>, ZhihuP
 
     @Override
     protected void initData() {
-        presenter.getZhihu(ZhihuApi.ZUIXINRIBAO);
+        presenter.getZhihu(0,ZhihuApi.ZUIXINRIBAO);
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mXrlv.setLayoutManager(manager);
@@ -70,31 +73,24 @@ public class RibaoFragment extends BaseFragment<ZhihuView<DailyListBean>, ZhihuP
         mMyXrlvAdapter = new MyXrlvAdapter(mData, getContext());
         mXrlv.setAdapter(mMyXrlvAdapter);
 
-    }
-
-    public class ImageLoader extends com.youth.banner.loader.ImageLoader{
-
-        @Override
-        public void displayImage(Context context, Object path, ImageView imageView) {
-            Glide.with(context).load(path).into(imageView);
-        }
+        mMyXrlvAdapter.setOnItemListener(new MyXrlvAdapter.OnItemListener() {
+            @Override
+            public void OnItemListener(DailyListBean.StoriesBean storiesBean, int position) {
+                Log.e("22222",storiesBean.getId()+"");
+                Intent intent = new Intent(getContext(), ZhihuActivity.class);
+                intent.putExtra("xiangqing",storiesBean.getId());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void showZhihu(DailyListBean dailyListBean) {
-        Log.e("111111111", dailyListBean.getStories().get(1).getTitle());
-        mDailyListBean = dailyListBean;
+        Log.e("111111111", dailyListBean.getStories().get(1).getId()+"");
+        mStoriesBeans.addAll(dailyListBean.getStories());
+        mStories = dailyListBean.getStories();
         mMyXrlvAdapter.setData(dailyListBean);
 
-//        ArrayList<String> iamge = new ArrayList<>();
-//        List<DailyListBean.StoriesBean> top_stories = mDailyListBean.getStories();
-//        for (int i = 0; i < top_stories.size(); i++) {
-//            List<String> images = top_stories.get(i).getImages();
-//            String s = images.get(0);
-//            iamge.add(s);
-//        }
-//
-//        mBanner.setImages(iamge).setImageLoader(new ImageLoader()).start();
     }
 
     @Override

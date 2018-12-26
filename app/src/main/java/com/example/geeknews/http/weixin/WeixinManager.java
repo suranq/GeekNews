@@ -32,6 +32,9 @@ public class WeixinManager {
             case DATA:
                 sWeixinServer.getWeixin(map);
                 break;
+            case SHOUSUO:
+                sWeixinServer.getSousuo(map);
+                break;
         }
         return null;
     }

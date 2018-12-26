@@ -48,6 +48,10 @@ public class WeixinPresenter<V extends WeixinView>extends IBasePresenter<V> impl
                     WeiXinBean weiXinBean = gson.fromJson(data, WeiXinBean.class);
                     mView.show(weiXinBean);
                     break;
+                case SHOUSUO:
+                    WeiXinBean xinBean = gson.fromJson(data, WeiXinBean.class);
+                    mView.show(xinBean);
+                    break;
             }
         }
     }

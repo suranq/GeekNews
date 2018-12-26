@@ -23,10 +23,10 @@ public interface WeixinServer {
     @GET("wxnew/?")
     Observable<String> getWeixin(@QueryMap Map<String,Object>map);
 
-//    /**
-//     * 微信精选列表
-//     */
-//    @GET("wxnew")
-//    Flowable<WXHttpResponse<List<WXItemBean>>> getWXHotSearch(@Query("key") String key, @Query("num") int num, @Query("page") int page, @Query("word") String word);
+    /**
+     * 微信精选列表
+     */
+    @GET("wxnew")
+    Observable<String> getSousuo(@QueryMap Map<String,Object>map);
 
 }

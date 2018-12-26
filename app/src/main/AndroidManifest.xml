@@ -23,7 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activitys.weixin.WeixinActivity"></activity>
+        <activity android:name=".activitys.weixin.WeixinActivity" />
+        <activity android:name=".activitys.weixin.zhihu.ZhihuActivity" />
+        <activity android:name=".activitys.weixin.zhihu.ZhuanlanActivity"></activity>
     </application>
 
 </manifest>

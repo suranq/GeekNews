@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.geeknews.MainActivity;
 import com.example.geeknews.R;
 import com.example.geeknews.activitys.weixin.WeixinActivity;
 import com.example.geeknews.adapters.MyWeixinAdapter;
@@ -21,6 +22,11 @@ import com.example.geeknews.beas.fragment.SimpleFragment;
 import com.example.geeknews.presenter.WeixinPresenter;
 import com.example.geeknews.view.WeixinView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +51,7 @@ public class WeixinFragment extends BaseFragment<WeixinView<WeiXinBean>,WeixinPr
     private MyWeixinAdapter mMyWeixinAdapter;
     private List<WeiXinBean.NewslistBean> mData = new ArrayList<>();
     private Map<String, Object> mMap;
+    private String mSousuo;
 
     public WeixinFragment() {
         // Required empty public constructor
@@ -60,14 +67,37 @@ public class WeixinFragment extends BaseFragment<WeixinView<WeiXinBean>,WeixinPr
     protected void load() {
 
     }
+   /* @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void getSousuo(String sousuo){
+        mSousuo = sousuo;
+        Log.e("111111111", sousuo);
+    }*/
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // 注销订阅者
+      //  EventBus.getDefault().unregister(this);
+    }
 
     @Override
     protected void initData() {
+       // EventBus.getDefault().register(this);
         mMap = new HashMap<>();
-        mMap.put("key","52b7ec3471ac3bec6846577e79f20e4c");
-        mMap.put("num","10");
-        mMap.put("page",mPage);
-        presenter.getWeixin(mMap, WeixinApi.DATA);
+        /*if (mSousuo != null){
+            mMap.put("key","52b7ec3471ac3bec6846577e79f20e4c");
+            mMap.put("num","10");
+            mMap.put("page",mPage);
+            mMap.put("word",mSousuo);
+            Log.e("eeeeeee",mSousuo);
+            presenter.getWeixin(mMap, WeixinApi.SHOUSUO);
+            mMyWeixinAdapter.notifyDataSetChanged();
+            mSousuo = null;
+        }else {}*/
+            mMap.put("key","52b7ec3471ac3bec6846577e79f20e4c");
+            mMap.put("num","10");
+            mMap.put("page",mPage);
+            presenter.getWeixin(mMap, WeixinApi.DATA);
+
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mXrlv.setLayoutManager(manager);
@@ -84,7 +114,30 @@ public class WeixinFragment extends BaseFragment<WeixinView<WeiXinBean>,WeixinPr
 
             }
         });
+
+        listener();
     }
+
+    private void listener() {
+        MainActivity.mViewsearch.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mMap.put("key","52b7ec3471ac3bec6846577e79f20e4c");
+                mMap.put("num","10");
+                mMap.put("page",mPage);
+                mMap.put("word",query);
+                Log.e("eeeeeee",query);
+                presenter.getWeixin(mMap, WeixinApi.SHOUSUO);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -125,6 +178,7 @@ public class WeixinFragment extends BaseFragment<WeixinView<WeiXinBean>,WeixinPr
         mData.addAll(weiXinBean.getNewslist());
         Log.e("55555555",weiXinBean.getNewslist().get(1).getTitle());
         mMyWeixinAdapter.setData(weiXinBean.getNewslist(),mPage);
+        mMyWeixinAdapter.notifyDataSetChanged();
     }
 
     @Override

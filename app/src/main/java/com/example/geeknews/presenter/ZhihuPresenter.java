@@ -3,10 +3,13 @@ package com.example.geeknews.presenter;
 import com.example.geeknews.api.ZhihuApi;
 import com.example.geeknews.beans.zhihu.DailyListBean;
 import com.example.geeknews.beans.zhihu.HotListBean;
+import com.example.geeknews.beans.zhihu.SectionChildListBean;
 import com.example.geeknews.beans.zhihu.SectionListBean;
+import com.example.geeknews.beans.zhihu.ZhihuDetailBean;
 import com.example.geeknews.beas.presenter.BasePresenter;
 import com.example.geeknews.beas.presenter.IBasePresenter;
 import com.example.geeknews.mdolue.ZhihuModlue;
+import com.example.geeknews.utils.ZhihuDiffCallback;
 import com.example.geeknews.view.ZhihuView;
 import com.google.gson.Gson;
 
@@ -18,9 +21,9 @@ public class ZhihuPresenter<V extends ZhihuView> extends IBasePresenter<V> imple
 
     private ZhihuModlue mZhihuModlue = new ZhihuModlue();
 
-    public void getZhihu(ZhihuApi zhihuApi){
+    public void getZhihu(int id,ZhihuApi zhihuApi){
         if (mView != null){
-            mZhihuModlue.getZhihu(this,zhihuApi);
+            mZhihuModlue.getZhihu(id,this,zhihuApi);
         }
     }
 
@@ -57,6 +60,14 @@ public class ZhihuPresenter<V extends ZhihuView> extends IBasePresenter<V> imple
                 case REMENRIBAO:
                     HotListBean hotListBean = gson.fromJson(data, HotListBean.class);
                     mView.showZhihu(hotListBean);
+                    break;
+                case RIBAOXIANGQING:
+                    ZhihuDetailBean zhihuDetailBean = gson.fromJson(data, ZhihuDetailBean.class);
+                    mView.showZhihu(zhihuDetailBean);
+                    break;
+                case ZHUANLANRIBAOXIANGQING:
+                    SectionChildListBean sectionChildListBean = gson.fromJson(data, SectionChildListBean.class);
+                    mView.showZhihu(sectionChildListBean);
                     break;
             }
         }

@@ -1,18 +1,21 @@
 package com.example.geeknews;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.geeknews.beas.activity.SimpleActivity;
 import com.example.geeknews.fragments.GanhuoFragment;
@@ -22,21 +25,37 @@ import com.example.geeknews.fragments.WeixinFragment;
 import com.example.geeknews.fragments.ZhihuFragment;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class MainActivity extends SimpleActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.view_search)
-    MaterialSearchView mViewSearch;
-    private MenuItem searchMenuItem;
+//    @BindView(R.id.view_search)
+//    MaterialSearchView mViewSearch;
+    @BindView(R.id.toolbar_container)
+    FrameLayout mToolbarContainer;
+    @BindView(R.id.fl_content)
+    FrameLayout mFlContent;
+    @BindView(R.id.nav_view)
+    NavigationView mNavView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    public static MenuItem searchMenuItem;
     private MenuItem mMenuItem;
     private Toolbar mToolbar;
+    public static MaterialSearchView mViewsearch;
 
+    //public static  MaterialSearchView mViewSearch;
     @Override
     protected void initData() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mViewsearch = findViewById(R.id.view_search);
         mToolbar.setTitle("知乎日报");
         setSupportActionBar(mToolbar);
 
@@ -73,12 +92,12 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem item = menu.findItem(R.id.action_settings);
-
         if (mMenuItem.getItemId() == R.id.drawer_zhihu) {
             item.setCheckable(true);
         } else {
@@ -86,7 +105,7 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
         }
 
         //关联toolbar的搜索按钮
-        mViewSearch.setMenuItem(item);
+        mViewsearch.setMenuItem(item);
         searchMenuItem = item;
         return true;
     }
@@ -110,7 +129,7 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        final int id = item.getItemId();
         //fragment事务管理器
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -123,6 +142,20 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
             fragmentTransaction.replace(R.id.fl_content, new WeixinFragment());
             searchMenuItem.setVisible(true);
             mToolbar.setTitle("微信精选");
+//            mViewSearch.setSubmitOnClick(true);
+//            mViewsearch.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+//                @Override
+//                public boolean onQueryTextSubmit(String query) {
+//                    Log.e("sssssss", query);
+//                    EventBus.getDefault().postSticky(query);
+//                    return false;
+//                }
+//
+//                @Override
+//                public boolean onQueryTextChange(String newText) {
+//                    return false;
+//                }
+//            });
         } else if (id == R.id.drawer_gank) {
             fragmentTransaction.replace(R.id.fl_content, new GanhuoFragment());
             searchMenuItem.setVisible(true);

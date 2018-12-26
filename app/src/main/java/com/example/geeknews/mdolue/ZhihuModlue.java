@@ -18,7 +18,7 @@ public class ZhihuModlue {
 
     }
 
-    public void getZhihu(final ZhihuCallback zhihuCallback, final ZhihuApi zhihuApi){
+    public void getZhihu(int id,final ZhihuCallback zhihuCallback, final ZhihuApi zhihuApi){
         zhihuCallback.setShowProgressbar();
         switch (zhihuApi) {
             case ZUIXINRIBAO:
@@ -39,6 +39,22 @@ public class ZhihuModlue {
                 break;
             case REMENRIBAO:
                 ZhihuManager.getZhihuManager().getHotList().compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(zhihuCallback) {
+                    @Override
+                    public void onNext(String value) {
+                        zhihuCallback.setZhihu(value,zhihuApi);
+                    }
+                });
+                break;
+            case RIBAOXIANGQING:
+                ZhihuManager.getZhihuManager().getDetailInfo(id).compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(zhihuCallback) {
+                    @Override
+                    public void onNext(String value) {
+                        zhihuCallback.setZhihu(value,zhihuApi);
+                    }
+                });
+                break;
+            case ZHUANLANRIBAOXIANGQING:
+                ZhihuManager.getZhihuManager().getSectionChildList(id).compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(zhihuCallback) {
                     @Override
                     public void onNext(String value) {
                         zhihuCallback.setZhihu(value,zhihuApi);

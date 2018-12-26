@@ -1,6 +1,7 @@
 package com.example.geeknews.fragments.zhihu;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.geeknews.R;
+import com.example.geeknews.activitys.weixin.zhihu.ZhuanlanActivity;
 import com.example.geeknews.adapters.zhihu.MyZhuanLanAdapter;
 import com.example.geeknews.api.ZhihuApi;
 import com.example.geeknews.beans.zhihu.SectionListBean;
@@ -54,13 +56,23 @@ public class ZhuanlanFragment extends BaseFragment<ZhihuView<SectionListBean>, Z
 
     @Override
     protected void initData() {
-        presenter.getZhihu(ZhihuApi.ZHUANLANRIBAO);
+        presenter.getZhihu(0,ZhihuApi.ZHUANLANRIBAO);
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mXrlv.setLayoutManager(manager);
         mXrlv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
 
         mMyZhuanLanAdapter = new MyZhuanLanAdapter(mData,getContext());
         mXrlv.setAdapter(mMyZhuanLanAdapter);
+
+        mMyZhuanLanAdapter.setOnItemListener(new MyZhuanLanAdapter.OnItemListener() {
+            @Override
+            public void OnItemListener(SectionListBean.DataBean dataBean) {
+                Intent intent = new Intent(getContext(), ZhuanlanActivity.class);
+                intent.putExtra("id",dataBean.getId());
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override

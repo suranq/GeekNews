@@ -1,6 +1,5 @@
 package com.example.geeknews.adapters.zhihu;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,30 +10,31 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
-import com.example.geeknews.beans.zhihu.HotListBean;
+import com.example.geeknews.activitys.weixin.zhihu.ZhuanlanActivity;
+import com.example.geeknews.beans.zhihu.SectionChildListBean;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.List;
 
 /**
- * Created by 马明祥 on 2018/12/24.
+ * Created by 马明祥 on 2018/12/26.
  */
 
-public class MyRemenAdapter extends XRecyclerView.Adapter{
-    private List<HotListBean.RecentBean> mData;
-    private final Context mContext;
+public class MyZhuanLanXiangAdapter extends XRecyclerView.Adapter{
+    private List<SectionChildListBean.StoriesBean> mData;
+    private final ZhuanlanActivity mZhuanlanActivity;
     private OnItemListener mListener;
 
-    public MyRemenAdapter(List<HotListBean.RecentBean> data, Context context) {
+    public MyZhuanLanXiangAdapter(List<SectionChildListBean.StoriesBean> data, ZhuanlanActivity zhuanlanActivity) {
 
         mData = data;
-        mContext = context;
+        mZhuanlanActivity = zhuanlanActivity;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflate = LayoutInflater.from(mContext).inflate(R.layout.ribaotem, null, false);
+        View inflate = LayoutInflater.from(mZhuanlanActivity).inflate(R.layout.ribaotem, null, false);
         MyViewHolder myViewHolder = new MyViewHolder(inflate);
         return myViewHolder;
     }
@@ -42,7 +42,7 @@ public class MyRemenAdapter extends XRecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
-        Glide.with(mContext).load(mData.get(position).getThumbnail()).into(holder1.mIv);
+        Glide.with(mZhuanlanActivity).load(mData.get(position).getImages().get(0)).into(holder1.mIv);
         holder1.mTv.setText(mData.get(position).getTitle());
 
         holder1.itemView.setOnClickListener(new View.OnClickListener() {
@@ -75,16 +75,13 @@ public class MyRemenAdapter extends XRecyclerView.Adapter{
         }
     }
 
-    public void setData(List<HotListBean.RecentBean> data) {
-        if (mData != null){
-            mData.clear();
-        }
-        mData.addAll(data);
+    public void setData(List<SectionChildListBean.StoriesBean> data) {
+        mData = data;
         notifyDataSetChanged();
     }
 
     public interface OnItemListener{
-        void OnItemListener(HotListBean.RecentBean recentBean);
+        void OnItemListener(SectionChildListBean.StoriesBean storiesBean);
     }
 
     public void setOnItemListener(OnItemListener listener){

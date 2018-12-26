@@ -13,18 +13,26 @@ import java.util.Map;
  */
 
 public class WeixinModlue {
-    public interface WeixinCallback<T> extends HttpFinishCallback{
+    public interface WeixinCallback<T> extends HttpFinishCallback {
         void setWeixin(T t, WeixinApi weixinApi);
     }
 
-    public void getWeixin(Map<String,Object>map, final WeixinCallback weixinCallback, final WeixinApi weixinApi){
+    public void getWeixin(Map<String, Object> map, final WeixinCallback weixinCallback, final WeixinApi weixinApi) {
         weixinCallback.setShowProgressbar();
         switch (weixinApi) {
             case DATA:
                 WeixinManager.getWeixinServer().getWeixin(map).compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(weixinCallback) {
                     @Override
                     public void onNext(String value) {
-                        weixinCallback.setWeixin(value,weixinApi);
+                        weixinCallback.setWeixin(value, weixinApi);
+                    }
+                });
+                break;
+            case SHOUSUO:
+                WeixinManager.getWeixinServer().getSousuo(map).compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(weixinCallback) {
+                    @Override
+                    public void onNext(String value) {
+                        weixinCallback.setWeixin(value, weixinApi);
                     }
                 });
                 break;
