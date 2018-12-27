@@ -51,7 +51,7 @@ public class MyWeixinAdapter extends XRecyclerView.Adapter{
             @Override
             public void onClick(View v) {
                 if (mListener != null){
-                    mListener.OnItemlistener(v,position);
+                    mListener.OnItemlistener(mData.get(position));
                 }
             }
         });
@@ -90,7 +90,7 @@ public class MyWeixinAdapter extends XRecyclerView.Adapter{
     }
 
     public interface onItemListener{
-        void OnItemlistener(View v,int position);
+        void OnItemlistener(WeiXinBean.NewslistBean newslistBean);
     }
     public void setonItemListener(onItemListener listener){
         mListener = listener;

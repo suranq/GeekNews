@@ -26,6 +26,8 @@ public enum ZhihuApi {
 
     CHANGPING,
 
-    DUANPING
+    DUANPING,
+
+    EWAIXINXI
 
 }

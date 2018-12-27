@@ -18,7 +18,7 @@ public class ZhihuModlue {
 
     }
 
-    public void getZhihu(int id,final ZhihuCallback zhihuCallback, final ZhihuApi zhihuApi){
+    public void getZhihu(String data,int id,final ZhihuCallback zhihuCallback, final ZhihuApi zhihuApi){
         zhihuCallback.setShowProgressbar();
         switch (zhihuApi) {
             case ZUIXINRIBAO:
@@ -55,6 +55,38 @@ public class ZhihuModlue {
                 break;
             case ZHUANLANRIBAOXIANGQING:
                 ZhihuManager.getZhihuManager().getSectionChildList(id).compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(zhihuCallback) {
+                    @Override
+                    public void onNext(String value) {
+                        zhihuCallback.setZhihu(value,zhihuApi);
+                    }
+                });
+                break;
+            case EWAIXINXI:
+                ZhihuManager.getZhihuManager().getDetailExtraInfo(id).compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(zhihuCallback) {
+                    @Override
+                    public void onNext(String value) {
+                        zhihuCallback.setZhihu(value,zhihuApi);
+                    }
+                });
+                break;
+            case CHANGPING:
+                ZhihuManager.getZhihuManager().getLongCommentInfo(id).compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(zhihuCallback) {
+                    @Override
+                    public void onNext(String value) {
+                        zhihuCallback.setZhihu(value,zhihuApi);
+                    }
+                });
+                break;
+            case DUANPING:
+                ZhihuManager.getZhihuManager().getShortCommentInfo(id).compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(zhihuCallback) {
+                    @Override
+                    public void onNext(String value) {
+                        zhihuCallback.setZhihu(value,zhihuApi);
+                    }
+                });
+                break;
+            case WANGQIRIBAO:
+                ZhihuManager.getZhihuManager().getDailyBeforeList(data).compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(zhihuCallback) {
                     @Override
                     public void onNext(String value) {
                         zhihuCallback.setZhihu(value,zhihuApi);

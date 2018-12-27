@@ -43,6 +43,11 @@ public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPr
     ViewPager mVp;
     Unbinder unbinder;
     private AndroidFragment mAndroidFragment;
+    private IOSFragment mIosFragment;
+    private QianduanFragment mQianduanFragment;
+    public static String mUrl;
+    public static String mUrl1;
+    public static String mUrl2;
 
     public GanhuoFragment() {
         // Required empty public constructor
@@ -60,7 +65,7 @@ public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPr
 
     @Override
     protected void initData() {
-        presenter.getGanhuo("福利",1, GanhuoApi.JISHU);
+        presenter.getGanhuo("福利",1, GanhuoApi.SUIJIMEIZI);
         mTab.addTab(mTab.newTab().setText("ANDROID"));
         mTab.addTab(mTab.newTab().setText("IOS"));
         mTab.addTab(mTab.newTab().setText("前端"));
@@ -84,9 +89,11 @@ public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPr
         mVp.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTab));
         ArrayList<Fragment> fragments = new ArrayList<>();
         mAndroidFragment = new AndroidFragment();
+        mIosFragment = new IOSFragment();
+        mQianduanFragment = new QianduanFragment();
         fragments.add(mAndroidFragment);
-        fragments.add(new IOSFragment());
-        fragments.add(new QianduanFragment());
+        fragments.add(mIosFragment);
+        fragments.add(mQianduanFragment);
         fragments.add(new FuliFragment());
         mVp.setAdapter(new MyFragmentAdapter(getChildFragmentManager(),fragments));
     }
@@ -123,12 +130,12 @@ public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPr
     @Override
     public void show(GanAndroid ganAndroid) {
         Log.e("666666",ganAndroid.getResults().get(0).getUrl());
-//        Bundle bundle = new Bundle();
-//        bundle.putString("meizi",ganAndroid.getResults().get(0).getUrl());
-//        mAndroidFragment.setArguments(bundle);
-
-//        String url = ganAndroid.getResults().get(0).getUrl();
-//        EventBus.getDefault().postSticky(url);
+        mUrl = ganAndroid.getResults().get(0).getUrl();
+        mUrl1 = ganAndroid.getResults().get(1).getUrl();
+        mUrl2 = ganAndroid.getResults().get(2).getUrl();
+//        mAndroidFragment.setData(ganAndroid.getResults().get(0).getUrl());
+//        mIosFragment.setData(ganAndroid.getResults().get(1).getUrl());
+//        mQianduanFragment.setData(ganAndroid.getResults().get(0).getUrl());
     }
 
     @Override

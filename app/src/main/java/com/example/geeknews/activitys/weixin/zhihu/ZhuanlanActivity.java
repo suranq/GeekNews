@@ -16,6 +16,7 @@ import com.example.geeknews.beans.zhihu.SectionChildListBean;
 import com.example.geeknews.beas.activity.BaseActivity;
 import com.example.geeknews.presenter.ZhihuPresenter;
 import com.example.geeknews.view.ZhihuView;
+import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ZhuanlanActivity extends BaseActivity<ZhihuView<SectionChildListBean>, ZhihuPresenter<ZhihuView<SectionChildListBean>>> implements ZhihuView<SectionChildListBean> {
+public class ZhuanlanActivity extends BaseActivity<ZhihuView<String>, ZhihuPresenter<ZhihuView<String>>> implements ZhihuView<String> {
 
     @BindView(R.id.xrlv)
     XRecyclerView mXrlv;
@@ -37,7 +38,7 @@ public class ZhuanlanActivity extends BaseActivity<ZhihuView<SectionChildListBea
     protected void initData() {
         final Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
-        presenter.getZhihu(id, ZhihuApi.ZHUANLANRIBAOXIANGQING);
+        presenter.getZhihu("",id, ZhihuApi.ZHUANLANRIBAOXIANGQING);
 
         mTab.setTitle("GeekNews");
         setSupportActionBar(mTab);
@@ -88,9 +89,14 @@ public class ZhuanlanActivity extends BaseActivity<ZhihuView<SectionChildListBea
     }
 
     @Override
-    public void showZhihu(SectionChildListBean sectionChildListBean) {
-        Log.e("88888888", sectionChildListBean.getStories().get(1).getTitle());
-        mMyZhuanLanXiangAdapter.setData(sectionChildListBean.getStories());
+    public void showZhihu(String s, ZhihuApi zhihuApi) {
+        Gson gson = new Gson();
+        switch (zhihuApi) {
+            case ZHUANLANRIBAOXIANGQING:
+                SectionChildListBean sectionChildListBean = gson.fromJson(s, SectionChildListBean.class);
+                mMyZhuanLanXiangAdapter.setData(sectionChildListBean.getStories());
+                break;
+        }
     }
 
     @Override
@@ -99,7 +105,7 @@ public class ZhuanlanActivity extends BaseActivity<ZhihuView<SectionChildListBea
     }
 
     @Override
-    protected ZhihuPresenter<ZhihuView<SectionChildListBean>> createPresenter() {
+    protected ZhihuPresenter<ZhihuView<String>> createPresenter() {
         return new ZhihuPresenter<>();
     }
 

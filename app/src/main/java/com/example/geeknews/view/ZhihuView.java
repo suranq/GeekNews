@@ -1,5 +1,6 @@
 package com.example.geeknews.view;
 
+import com.example.geeknews.api.ZhihuApi;
 import com.example.geeknews.beas.view.BaseView;
 
 /**
@@ -8,6 +9,6 @@ import com.example.geeknews.beas.view.BaseView;
 
 public interface ZhihuView<T> extends BaseView{
 
-    void showZhihu(T t);
+    void showZhihu(T t, ZhihuApi zhihuApi);
     void showError(String error);
 }

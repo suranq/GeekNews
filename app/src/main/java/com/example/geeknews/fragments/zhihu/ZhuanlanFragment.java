@@ -19,6 +19,7 @@ import com.example.geeknews.beans.zhihu.SectionListBean;
 import com.example.geeknews.beas.fragment.BaseFragment;
 import com.example.geeknews.presenter.ZhihuPresenter;
 import com.example.geeknews.view.ZhihuView;
+import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ZhuanlanFragment extends BaseFragment<ZhihuView<SectionListBean>, ZhihuPresenter<ZhihuView<SectionListBean>>> implements ZhihuView<SectionListBean> {
+public class ZhuanlanFragment extends BaseFragment<ZhihuView<String>, ZhihuPresenter<ZhihuView<String>>> implements ZhihuView<String> {
 
 
     @BindView(R.id.xrlv)
@@ -56,7 +57,7 @@ public class ZhuanlanFragment extends BaseFragment<ZhihuView<SectionListBean>, Z
 
     @Override
     protected void initData() {
-        presenter.getZhihu(0,ZhihuApi.ZHUANLANRIBAO);
+        presenter.getZhihu("",0,ZhihuApi.ZHUANLANRIBAO);
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mXrlv.setLayoutManager(manager);
         mXrlv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
@@ -76,12 +77,6 @@ public class ZhuanlanFragment extends BaseFragment<ZhihuView<SectionListBean>, Z
     }
 
     @Override
-    public void showZhihu(SectionListBean sectionListBean) {
-        Log.e("dytdytdd",sectionListBean.getData().get(0).getName());
-        mMyZhuanLanAdapter.setData(sectionListBean.getData());
-    }
-
-    @Override
     public void showProgressbar() {
 
     }
@@ -92,12 +87,23 @@ public class ZhuanlanFragment extends BaseFragment<ZhihuView<SectionListBean>, Z
     }
 
     @Override
+    public void showZhihu(String s, ZhihuApi zhihuApi) {
+        Gson gson = new Gson();
+        switch (zhihuApi) {
+            case ZHUANLANRIBAO:
+                SectionListBean sectionListBean = gson.fromJson(s, SectionListBean.class);
+                mMyZhuanLanAdapter.setData(sectionListBean.getData());
+                break;
+        }
+    }
+
+    @Override
     public void showError(String error) {
         Log.e("error",error);
     }
 
     @Override
-    protected ZhihuPresenter<ZhihuView<SectionListBean>> createPresenter() {
+    protected ZhihuPresenter<ZhihuView<String>> createPresenter() {
         return new ZhihuPresenter<>();
     }
 

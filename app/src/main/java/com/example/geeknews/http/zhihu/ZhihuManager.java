@@ -25,7 +25,7 @@ public class ZhihuManager {
         return sZhihuServer;
     }
 
-    public Observable<String> getZhihu(int id,ZhihuApi zhihuApi) {
+    public Observable<String> getZhihu(String data,int id,ZhihuApi zhihuApi) {
         switch (zhihuApi) {
             case ZUIXINRIBAO:
                 sZhihuServer.getDailyList();
@@ -41,6 +41,18 @@ public class ZhihuManager {
                 break;
             case ZHUANLANRIBAOXIANGQING:
                 sZhihuServer.getSectionChildList(id);
+                break;
+            case EWAIXINXI:
+                sZhihuServer.getDetailExtraInfo(id);
+                break;
+            case CHANGPING:
+                sZhihuServer.getLongCommentInfo(id);
+                break;
+            case DUANPING:
+                sZhihuServer.getShortCommentInfo(id);
+                break;
+            case WANGQIRIBAO:
+                sZhihuServer.getDailyBeforeList(data);
                 break;
         }
         return null;

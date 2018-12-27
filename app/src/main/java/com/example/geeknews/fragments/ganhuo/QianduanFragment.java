@@ -1,6 +1,7 @@
 package com.example.geeknews.fragments.ganhuo;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
@@ -14,11 +15,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
+import com.example.geeknews.activitys.weixin.WeixinActivity;
 import com.example.geeknews.adapters.ganhuo.MyAndroidAdapter;
 import com.example.geeknews.api.GanhuoApi;
 import com.example.geeknews.beans.zhihu.ganhuo.GanAndroid;
 import com.example.geeknews.beas.fragment.BaseFragment;
+import com.example.geeknews.fragments.GanhuoFragment;
 import com.example.geeknews.presenter.GanhuoPresenter;
 import com.example.geeknews.view.GanhuoView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -53,6 +57,7 @@ public class QianduanFragment extends BaseFragment<GanhuoView<GanAndroid>, Ganhu
     private int mPage = 1;
     private String mTech = "前端";
     private List<GanAndroid.ResultsBean> mData = new ArrayList<>();
+    private String Url;
 
     public QianduanFragment() {
         // Required empty public constructor
@@ -78,6 +83,18 @@ public class QianduanFragment extends BaseFragment<GanhuoView<GanAndroid>, Ganhu
         mMyAndroidAdapter = new MyAndroidAdapter(mData,getContext());
         mXrlv.setAdapter(mMyAndroidAdapter);
         mXrlv.setLoadingListener(this);
+
+        Glide.with(getContext()).load(GanhuoFragment.mUrl2).into(mIvTechBlur);
+
+        mMyAndroidAdapter.setOnItemListener(new MyAndroidAdapter.OnItemListener() {
+            @Override
+            public void OnItemListener(GanAndroid.ResultsBean resultsBean) {
+                Intent intent = new Intent(getContext(), WeixinActivity.class);
+                intent.putExtra("url",resultsBean.getUrl());
+                intent.putExtra("title",resultsBean.getDesc());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -135,4 +152,8 @@ public class QianduanFragment extends BaseFragment<GanhuoView<GanAndroid>, Ganhu
         mXrlv.loadMoreComplete();
     }
 
+    public void setData(String data) {
+        Url = data;
+//        Glide.with(getContext()).load(data).into(mIvTechBlur);
+    }
 }

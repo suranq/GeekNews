@@ -23,6 +23,7 @@ import java.util.List;
 public class MyAndroidAdapter extends XRecyclerView.Adapter{
     private List<GanAndroid.ResultsBean> mData;
     private final Context mContext;
+    private OnItemListener mListener;
 
     public MyAndroidAdapter(List<GanAndroid.ResultsBean> data, Context context) {
 
@@ -39,11 +40,20 @@ public class MyAndroidAdapter extends XRecyclerView.Adapter{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
         holder1.mTv1.setText(mData.get(position).getDesc());
         holder1.mTv2.setText(mData.get(position).getWho());
         holder1.mTv3.setText(mData.get(position).getPublishedAt());
+
+        holder1.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null){
+                    mListener.OnItemListener(mData.get(position));
+                }
+            }
+        });
     }
 
     @Override
@@ -76,5 +86,13 @@ public class MyAndroidAdapter extends XRecyclerView.Adapter{
         }
         mData.addAll(ganAndroid);
         notifyDataSetChanged();
+    }
+
+    public interface OnItemListener{
+        void OnItemListener(GanAndroid.ResultsBean resultsBean);
+    }
+
+    public void setOnItemListener(OnItemListener listener){
+        mListener = listener;
     }
 }

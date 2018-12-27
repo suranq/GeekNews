@@ -1,7 +1,10 @@
 package com.example.geeknews.presenter;
 
 import com.example.geeknews.api.ZhihuApi;
+import com.example.geeknews.beans.zhihu.CommentBean;
+import com.example.geeknews.beans.zhihu.DailyBeforeListBean;
 import com.example.geeknews.beans.zhihu.DailyListBean;
+import com.example.geeknews.beans.zhihu.DetailExtraBean;
 import com.example.geeknews.beans.zhihu.HotListBean;
 import com.example.geeknews.beans.zhihu.SectionChildListBean;
 import com.example.geeknews.beans.zhihu.SectionListBean;
@@ -21,9 +24,9 @@ public class ZhihuPresenter<V extends ZhihuView> extends IBasePresenter<V> imple
 
     private ZhihuModlue mZhihuModlue = new ZhihuModlue();
 
-    public void getZhihu(int id,ZhihuApi zhihuApi){
+    public void getZhihu(String data,int id,ZhihuApi zhihuApi){
         if (mView != null){
-            mZhihuModlue.getZhihu(id,this,zhihuApi);
+            mZhihuModlue.getZhihu(data,id,this,zhihuApi);
         }
     }
 
@@ -45,29 +48,35 @@ public class ZhihuPresenter<V extends ZhihuView> extends IBasePresenter<V> imple
 
     @Override
     public void setZhihu(Object o, ZhihuApi zhihuApi) {
-        String data = (String) o;
-        Gson gson = new Gson();
         if (mView!= null){
             switch (zhihuApi) {
                 case ZUIXINRIBAO:
-                    DailyListBean dailyListBean = gson.fromJson(data, DailyListBean.class);
-                    mView.showZhihu(dailyListBean);
+
+                    mView.showZhihu(o,zhihuApi);
                     break;
                 case ZHUANLANRIBAO:
-                    SectionListBean sectionListBean = gson.fromJson(data, SectionListBean.class);
-                    mView.showZhihu(sectionListBean);
+                    mView.showZhihu(o,zhihuApi);
                     break;
                 case REMENRIBAO:
-                    HotListBean hotListBean = gson.fromJson(data, HotListBean.class);
-                    mView.showZhihu(hotListBean);
+                    mView.showZhihu(o,zhihuApi);
                     break;
                 case RIBAOXIANGQING:
-                    ZhihuDetailBean zhihuDetailBean = gson.fromJson(data, ZhihuDetailBean.class);
-                    mView.showZhihu(zhihuDetailBean);
+                    mView.showZhihu(o,zhihuApi);
                     break;
                 case ZHUANLANRIBAOXIANGQING:
-                    SectionChildListBean sectionChildListBean = gson.fromJson(data, SectionChildListBean.class);
-                    mView.showZhihu(sectionChildListBean);
+                    mView.showZhihu(o,zhihuApi);
+                    break;
+                case EWAIXINXI:
+                    mView.showZhihu(o,zhihuApi);
+                    break;
+                case CHANGPING:
+                    mView.showZhihu(o,zhihuApi);
+                    break;
+                case DUANPING:
+                    mView.showZhihu(o,zhihuApi);
+                    break;
+                case WANGQIRIBAO:
+                    mView.showZhihu(o,zhihuApi);
                     break;
             }
         }

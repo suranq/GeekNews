@@ -30,7 +30,7 @@ public interface GanhuoServer {
     /**
      * 随机妹纸图
      */
-    @GET("random/data/福利/1")
+    @GET("random/data/福利/10")
     Observable<String>getSui();
 //
 //    /**

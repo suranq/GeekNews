@@ -142,20 +142,6 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
             fragmentTransaction.replace(R.id.fl_content, new WeixinFragment());
             searchMenuItem.setVisible(true);
             mToolbar.setTitle("微信精选");
-//            mViewSearch.setSubmitOnClick(true);
-//            mViewsearch.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-//                @Override
-//                public boolean onQueryTextSubmit(String query) {
-//                    Log.e("sssssss", query);
-//                    EventBus.getDefault().postSticky(query);
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onQueryTextChange(String newText) {
-//                    return false;
-//                }
-//            });
         } else if (id == R.id.drawer_gank) {
             fragmentTransaction.replace(R.id.fl_content, new GanhuoFragment());
             searchMenuItem.setVisible(true);

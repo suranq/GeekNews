@@ -1,6 +1,7 @@
 package com.example.geeknews.fragments.ganhuo;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
@@ -16,10 +17,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
+import com.example.geeknews.activitys.weixin.WeixinActivity;
 import com.example.geeknews.adapters.ganhuo.MyAndroidAdapter;
 import com.example.geeknews.api.GanhuoApi;
 import com.example.geeknews.beans.zhihu.ganhuo.GanAndroid;
 import com.example.geeknews.beas.fragment.BaseFragment;
+import com.example.geeknews.fragments.GanhuoFragment;
 import com.example.geeknews.presenter.GanhuoPresenter;
 import com.example.geeknews.view.GanhuoView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -60,6 +63,7 @@ public class AndroidFragment extends BaseFragment<GanhuoView<GanAndroid>, Ganhuo
     private List<GanAndroid.ResultsBean> mData = new ArrayList<>();
     private String ganAndroid;
     private boolean isMeizi = false;
+    private String Url;
 
     public AndroidFragment() {
         // Required empty public constructor
@@ -77,49 +81,44 @@ public class AndroidFragment extends BaseFragment<GanhuoView<GanAndroid>, Ganhuo
 
     @Override
     protected void initData() {
-//        EventBus.getDefault().register(this);
-        presenter.getGanhuo(mTech,mPage, GanhuoApi.JISHU);
+
+        presenter.getGanhuo(mTech, mPage, GanhuoApi.JISHU);
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mXrlv.setLayoutManager(manager);
-        mXrlv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        mXrlv.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        mMyAndroidAdapter = new MyAndroidAdapter(mData,getContext());
+        mMyAndroidAdapter = new MyAndroidAdapter(mData, getContext());
         mXrlv.setAdapter(mMyAndroidAdapter);
         mXrlv.setLoadingListener(this);
 
-//        Bundle arguments = getArguments();
-//        String meizi = arguments.getString("meizi");
-//        Glide.with(getContext()).load(meizi).into(mIvTechBlur);
-//        Log.e("77777",ganAndroid);
+        Glide.with(getContext()).load(GanhuoFragment.mUrl).into(mIvTechOrigin);
 
+        mMyAndroidAdapter.setOnItemListener(new MyAndroidAdapter.OnItemListener() {
+            @Override
+            public void OnItemListener(GanAndroid.ResultsBean resultsBean) {
+                Intent intent = new Intent(getContext(), WeixinActivity.class);
+                intent.putExtra("url",resultsBean.getUrl());
+                intent.putExtra("title",resultsBean.getDesc());
+                startActivity(intent);
+            }
+        });
     }
-//    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-//    public void getData(String url){
-//        this.ganAndroid = url;
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        // 注销订阅者
-//        EventBus.getDefault().unregister(this);
-//    }
 
     @Override
     public void showProgressbar() {
-        presenter.setShowProgressbar();
+
     }
 
     @Override
     public void hideProgressbar() {
-        presenter.setHideProgressbar();
+
     }
 
     @Override
     public void show(GanAndroid ganAndroid) {
-//        Log.e("44444444", ganAndroid.getResults().get(1).getImages().get(0));
         Log.e("44444444",ganAndroid.getResults().get(1).getUrl());
         mMyAndroidAdapter.setData(ganAndroid.getResults(),mPage);
+
     }
 
     @Override
@@ -130,20 +129,6 @@ public class AndroidFragment extends BaseFragment<GanhuoView<GanAndroid>, Ganhuo
     @Override
     protected GanhuoPresenter<GanhuoView<GanAndroid>> createPresenter() {
         return new GanhuoPresenter<>();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override
@@ -158,5 +143,10 @@ public class AndroidFragment extends BaseFragment<GanhuoView<GanAndroid>, Ganhuo
         mPage++;
         presenter.getGanhuo(mTech,mPage,GanhuoApi.JISHU);
         mXrlv.loadMoreComplete();
+    }
+
+    public void setData(String data) {
+        Url = data;
+//        Glide.with(getContext()).load(data).into(mIvTechOrigin);
     }
 }
