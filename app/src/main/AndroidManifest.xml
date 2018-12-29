@@ -8,7 +8,7 @@
     <application
         android:name=".app.Myapp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/tisi"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -26,13 +26,13 @@
         <activity
             android:name=".activitys.weixin.zhihu.ZhihuRiliActivity"
             android:label="@string/title_activity_calendar"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activitys.weixin.WeixinActivity" />
         <activity android:name=".activitys.weixin.zhihu.ZhihuActivity" />
         <activity android:name=".activitys.weixin.zhihu.ZhuanlanActivity" />
         <activity android:name=".activitys.weixin.zhihu.ZhiPingActivity" />
-
+        <activity android:name=".activitys.weixin.ganhuo.MeiziActivity" />
+        <activity android:name=".adapters.shuju.ShujuActivity"></activity>
     </application>
 
 </manifest>

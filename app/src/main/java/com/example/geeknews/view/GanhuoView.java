@@ -1,5 +1,6 @@
 package com.example.geeknews.view;
 
+import com.example.geeknews.api.GanhuoApi;
 import com.example.geeknews.beas.view.BaseView;
 
 /**
@@ -8,7 +9,7 @@ import com.example.geeknews.beas.view.BaseView;
 
 public interface GanhuoView<T> extends BaseView{
 
-    void show(T t);
+    void show(T t, GanhuoApi ganhuoApi);
 
     void showError(String error);
 

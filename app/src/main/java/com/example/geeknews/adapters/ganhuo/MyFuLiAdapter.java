@@ -22,6 +22,7 @@ import java.util.List;
 public class MyFuLiAdapter extends XRecyclerView.Adapter{
     private List<GanAndroid.ResultsBean> mData;
     private final Context mContext;
+    private OnItemListener mListener;
 
     public MyFuLiAdapter(List<GanAndroid.ResultsBean> data, Context context) {
 
@@ -38,9 +39,23 @@ public class MyFuLiAdapter extends XRecyclerView.Adapter{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
         Glide.with(mContext).load(mData.get(position).getUrl()).into(holder1.mIv);
+        holder1.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null){
+                    mListener.OnItemListener(mData.get(position));
+                }
+            }
+        });
+        holder1.mIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -67,5 +82,13 @@ public class MyFuLiAdapter extends XRecyclerView.Adapter{
         }
         mData.addAll(ganAndroid);
         notifyDataSetChanged();
+    }
+
+    public interface OnItemListener{
+        void OnItemListener(GanAndroid.ResultsBean resultsBean);
+    }
+
+    public void setOnItemListener(OnItemListener listener){
+        mListener = listener;
     }
 }

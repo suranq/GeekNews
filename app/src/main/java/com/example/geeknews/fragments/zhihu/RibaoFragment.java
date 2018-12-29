@@ -11,17 +11,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.example.geeknews.R;
 import com.example.geeknews.activitys.weixin.zhihu.ZhihuActivity;
 import com.example.geeknews.activitys.weixin.zhihu.ZhihuRiliActivity;
+import com.example.geeknews.adapters.zhihu.MyAdapter;
 import com.example.geeknews.adapters.zhihu.MyXrlvAdapter;
 import com.example.geeknews.api.ZhihuApi;
 import com.example.geeknews.beans.zhihu.DailyBeforeListBean;
 import com.example.geeknews.beans.zhihu.DailyListBean;
+import com.example.geeknews.beans.zhihu.SectionChildListBean;
 import com.example.geeknews.beas.fragment.BaseFragment;
 import com.example.geeknews.presenter.ZhihuPresenter;
 import com.example.geeknews.utils.CircularAnimUtil;
+import com.example.geeknews.utils.DateUtil;
 import com.example.geeknews.view.ZhihuView;
 import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -50,8 +55,8 @@ public class RibaoFragment extends BaseFragment<ZhihuView<String>, ZhihuPresente
     @BindView(R.id.fab_calender)
     FloatingActionButton mFabCalender;
     Unbinder unbinder1;
-//    @BindView(R.id.banner)
-//    Banner mBanner;
+    @BindView(R.id.frame)
+    FrameLayout mFrame;
 
     private List<DailyListBean.TopStoriesBean> mData = new ArrayList<>();
     private MyXrlvAdapter mMyXrlvAdapter;
@@ -61,6 +66,7 @@ public class RibaoFragment extends BaseFragment<ZhihuView<String>, ZhihuPresente
     private int mYue;
     private int mDay;
     private String mDate;
+    private String mTomorrowDate;
 
     public RibaoFragment() {
         // Required empty public constructor
@@ -79,11 +85,8 @@ public class RibaoFragment extends BaseFragment<ZhihuView<String>, ZhihuPresente
     @Override
     protected void initData() {
         EventBus.getDefault().register(this);
-        presenter.getZhihu("",0, ZhihuApi.ZUIXINRIBAO);
-
-
-//        Log.e("sssssssssssss",data);
-//        presenter.getZhihu(data,0,ZhihuApi.WANGQIRIBAO);
+        mTomorrowDate = DateUtil.getTomorrowDate();
+        presenter.getZhihu("", 0, ZhihuApi.ZUIXINRIBAO);
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mXrlv.setLayoutManager(manager);
@@ -103,28 +106,33 @@ public class RibaoFragment extends BaseFragment<ZhihuView<String>, ZhihuPresente
         });
 
     }
-    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
-    public void getRiqi(CalendarDay data){
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void getRiqi(CalendarDay data) {
         mYear = data.getYear();
         int month = data.getMonth();
-        mYue = month+1;
+        mYue = month + 1;
         mDay = data.getDay();
-        String dataa = mYear+""+mYue+""+mDay;
-        if (data.getDate().equals(mDate)){
-            mXrlv.setVisibility(View.VISIBLE);
-            mFabCalender.setVisibility(View.GONE);
-        }else {
-            presenter.getZhihu(dataa,0,ZhihuApi.WANGQIRIBAO);
+        String dataa = mYear + "" + mYue + "" + mDay;
+        if (data.getDate().equals(mTomorrowDate)) {
+
+        } else {
+            presenter.getZhihu(dataa, 0, ZhihuApi.WANGQIRIBAO);
         }
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+    }
 
     @OnClick(R.id.fab_calender)
     void startCalender() {
         Intent intent = new Intent();
         intent.setClass(getContext(), ZhihuRiliActivity.class);
-        CircularAnimUtil.startActivity(getActivity(),intent,mFabCalender,R.color.fab_bg);
+        CircularAnimUtil.startActivity(getActivity(), intent, mFabCalender, R.color.fab_bg);
     }
 
     @Override
@@ -139,20 +147,21 @@ public class RibaoFragment extends BaseFragment<ZhihuView<String>, ZhihuPresente
     }
 
     @Override
-    public void showZhihu(String s,ZhihuApi zhihuApi) {
+    public void showZhihu(String s, ZhihuApi zhihuApi) {
         Gson gson = new Gson();
         switch (zhihuApi) {
             case ZUIXINRIBAO:
                 DailyListBean dailyListBean = gson.fromJson(s, DailyListBean.class);
                 mDate = dailyListBean.getDate();
-                Log.e("vvvvvvv",dailyListBean.getStories().get(1).getTitle());
+                Log.e("vvvvvvv", dailyListBean.getStories().get(1).getTitle());
                 mStoriesBeans.addAll(dailyListBean.getStories());
                 mStories = dailyListBean.getStories();
                 mMyXrlvAdapter.setData(dailyListBean);
                 break;
             case WANGQIRIBAO:
                 DailyBeforeListBean dailyBeforeListBean = gson.fromJson(s, DailyBeforeListBean.class);
-                Log.e("wwwwwwwww",dailyBeforeListBean.getStories().get(1).getTitle());
+                Log.e("wwwwwwwww", dailyBeforeListBean.getStories().get(1).getTitle());
+//              mMyAdapter.setData(dailyBeforeListBean.getStories());
                 mMyXrlvAdapter.setWang(dailyBeforeListBean);
                 break;
         }

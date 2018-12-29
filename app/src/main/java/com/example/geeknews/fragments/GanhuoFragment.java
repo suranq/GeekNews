@@ -34,7 +34,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPresenter<GanhuoView<GanAndroid>>> implements GanhuoView<GanAndroid>{
+public class GanhuoFragment extends SimpleFragment{
 
 
     @BindView(R.id.tab)
@@ -45,9 +45,6 @@ public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPr
     private AndroidFragment mAndroidFragment;
     private IOSFragment mIosFragment;
     private QianduanFragment mQianduanFragment;
-    public static String mUrl;
-    public static String mUrl1;
-    public static String mUrl2;
 
     public GanhuoFragment() {
         // Required empty public constructor
@@ -65,7 +62,7 @@ public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPr
 
     @Override
     protected void initData() {
-        presenter.getGanhuo("福利",1, GanhuoApi.SUIJIMEIZI);
+
         mTab.addTab(mTab.newTab().setText("ANDROID"));
         mTab.addTab(mTab.newTab().setText("IOS"));
         mTab.addTab(mTab.newTab().setText("前端"));
@@ -96,50 +93,5 @@ public class GanhuoFragment extends BaseFragment<GanhuoView<GanAndroid>,GanhuoPr
         fragments.add(mQianduanFragment);
         fragments.add(new FuliFragment());
         mVp.setAdapter(new MyFragmentAdapter(getChildFragmentManager(),fragments));
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    protected GanhuoPresenter<GanhuoView<GanAndroid>> createPresenter() {
-        return new GanhuoPresenter<>();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
-    @Override
-    public void showProgressbar() {
-
-    }
-
-    @Override
-    public void hideProgressbar() {
-
-    }
-
-    @Override
-    public void show(GanAndroid ganAndroid) {
-        Log.e("666666",ganAndroid.getResults().get(0).getUrl());
-        mUrl = ganAndroid.getResults().get(0).getUrl();
-        mUrl1 = ganAndroid.getResults().get(1).getUrl();
-        mUrl2 = ganAndroid.getResults().get(2).getUrl();
-//        mAndroidFragment.setData(ganAndroid.getResults().get(0).getUrl());
-//        mIosFragment.setData(ganAndroid.getResults().get(1).getUrl());
-//        mQianduanFragment.setData(ganAndroid.getResults().get(0).getUrl());
-    }
-
-    @Override
-    public void showError(String error) {
-
     }
 }

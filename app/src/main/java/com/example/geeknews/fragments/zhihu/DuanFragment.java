@@ -73,7 +73,7 @@ public class DuanFragment extends BaseFragment<ZhihuView<String>, ZhihuPresenter
         mXrlv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
 
         mMyPIngAdapter = new MyPIngAdapter(mData,getContext());
-//        mXrlv.setAdapter(mMyPIngAdapter);
+        mXrlv.setAdapter(mMyPIngAdapter);
     }
 
     @Override
@@ -92,6 +92,7 @@ public class DuanFragment extends BaseFragment<ZhihuView<String>, ZhihuPresenter
         switch (zhihuApi) {
             case DUANPING:
                 CommentBean commentBean = gson.fromJson(s, CommentBean.class);
+                Log.e("ddddddd",commentBean.getComments().get(1).getAuthor());
                 mMyPIngAdapter.setData(commentBean.getComments());
                 break;
         }
@@ -105,9 +106,5 @@ public class DuanFragment extends BaseFragment<ZhihuView<String>, ZhihuPresenter
     @Override
     protected ZhihuPresenter<ZhihuView<String>> createPresenter() {
         return new ZhihuPresenter<>();
-    }  @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 }

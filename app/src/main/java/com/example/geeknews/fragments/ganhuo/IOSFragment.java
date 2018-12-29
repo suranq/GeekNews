@@ -25,6 +25,7 @@ import com.example.geeknews.beas.fragment.BaseFragment;
 import com.example.geeknews.fragments.GanhuoFragment;
 import com.example.geeknews.presenter.GanhuoPresenter;
 import com.example.geeknews.view.GanhuoView;
+import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IOSFragment extends BaseFragment<GanhuoView<GanAndroid>, GanhuoPresenter<GanhuoView<GanAndroid>>> implements GanhuoView<GanAndroid>, XRecyclerView.LoadingListener {
+public class IOSFragment extends BaseFragment<GanhuoView<String>, GanhuoPresenter<GanhuoView<String>>> implements GanhuoView<String>, XRecyclerView.LoadingListener {
 
     @BindView(R.id.iv_tech_blur)
     ImageView mIvTechBlur;
@@ -75,6 +76,7 @@ public class IOSFragment extends BaseFragment<GanhuoView<GanAndroid>, GanhuoPres
     @Override
     protected void initData() {
         presenter.getGanhuo(mTech,mPage, GanhuoApi.JISHU);
+        presenter.getGanhuo("福利",1, GanhuoApi.SUIJIMEIZI);
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mXrlv.setLayoutManager(manager);
         mXrlv.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
@@ -82,8 +84,6 @@ public class IOSFragment extends BaseFragment<GanhuoView<GanAndroid>, GanhuoPres
         mMyAndroidAdapter = new MyAndroidAdapter(mData,getContext());
         mXrlv.setAdapter(mMyAndroidAdapter);
         mXrlv.setLoadingListener(this);
-
-        Glide.with(getContext()).load(GanhuoFragment.mUrl1).into(mIvTechBlur);
 
         mMyAndroidAdapter.setOnItemListener(new MyAndroidAdapter.OnItemListener() {
             @Override
@@ -107,10 +107,19 @@ public class IOSFragment extends BaseFragment<GanhuoView<GanAndroid>, GanhuoPres
     }
 
     @Override
-    public void show(GanAndroid ganAndroid) {
-//        Log.e("44444444", ganAndroid.getResults().get(1).getImages().get(0));
-        Log.e("44444444",ganAndroid.getResults().get(1).getUrl());
-        mMyAndroidAdapter.setData(ganAndroid.getResults(),mPage);
+    public void show(String s, GanhuoApi ganhuoApi) {
+        Gson gson = new Gson();
+        switch (ganhuoApi) {
+            case JISHU:
+                GanAndroid ganAndroid = gson.fromJson(s, GanAndroid.class);
+                mMyAndroidAdapter.setData(ganAndroid.getResults(),mPage);
+                break;
+            case SUIJIMEIZI:
+                GanAndroid ganAndroid1 = gson.fromJson(s, GanAndroid.class);
+                Glide.with(getContext()).load(ganAndroid1.getResults().get(0).getUrl()).into(mIvTechOrigin);
+                mTvTechCopyright.setText("by:"+ganAndroid1.getResults().get(0).getWho());
+                break;
+        }
     }
 
     @Override
@@ -119,22 +128,8 @@ public class IOSFragment extends BaseFragment<GanhuoView<GanAndroid>, GanhuoPres
     }
 
     @Override
-    protected GanhuoPresenter<GanhuoView<GanAndroid>> createPresenter() {
+    protected GanhuoPresenter<GanhuoView<String>> createPresenter() {
         return new GanhuoPresenter<>();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override
@@ -149,10 +144,5 @@ public class IOSFragment extends BaseFragment<GanhuoView<GanAndroid>, GanhuoPres
         mPage++;
         presenter.getGanhuo(mTech,mPage,GanhuoApi.JISHU);
         mXrlv.loadMoreComplete();
-    }
-
-    public void setData(String data) {
-        Url = data;
-//        Glide.with(getContext()).load(data).into(mIvTechBlur);
     }
 }

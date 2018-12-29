@@ -38,17 +38,13 @@ public class GanhuoPresenter<V extends GanhuoView> extends IBasePresenter<V> imp
 
     @Override
     public void setGanhuo(Object o, GanhuoApi ganhuoApi) {
-        String data = (String) o;
-        Gson gson = new Gson();
         if (mView != null) {
             switch (ganhuoApi) {
                 case JISHU:
-                    GanAndroid ganAndroid = gson.fromJson(data, GanAndroid.class);
-                    mView.show(ganAndroid);
+                    mView.show(o,ganhuoApi);
                     break;
                 case SUIJIMEIZI:
-                    GanAndroid ganAndroid1 = gson.fromJson(data, GanAndroid.class);
-                    mView.show(ganAndroid1);
+                    mView.show(o,ganhuoApi);
                     break;
             }
         }

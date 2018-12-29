@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.geeknews.R;
 import com.example.geeknews.beans.zhihu.CommentBean;
+import com.example.geeknews.utils.DateUtil;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.List;
@@ -25,10 +26,19 @@ public class MyPIngAdapter extends XRecyclerView.Adapter{
     private List<CommentBean.CommentsBean> mData;
     private final Context mContext;
 
+    private static final int Weizhi = 0;
+    private static final int Wuxu = 1;
+    private static final int YiZhan = 2;
+    private static final int YiShow = 3;
+
+    private static final int ErHang =2;
+    private final LayoutInflater mInflater;
+
     public MyPIngAdapter(List<CommentBean.CommentsBean> data, Context context) {
 
         mData = data;
         mContext = context;
+        mInflater = LayoutInflater.from(context);
     }
 
     @NonNull
@@ -43,11 +53,16 @@ public class MyPIngAdapter extends XRecyclerView.Adapter{
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
         RequestOptions requestOptions = new RequestOptions().circleCrop();
-        Glide.with(mContext).load(mData.get(position).getAvatar()).apply(requestOptions).into(holder1.mIv);
-        holder1.mTvname.setText(mData.get(position).getAuthor());
-        holder1.mTvbody.setText(mData.get(position).getContent());
-        holder1.mTvtime.setText(mData.get(position).getTime());
-        holder1.mTvlike.setText(mData.get(position).getLikes());
+
+        Glide.with(mContext).load(mData.get(position).getAvatar()).apply(requestOptions).into(holder1.mCiv_comment_face);
+        holder1.mTvcomment_name.setText(mData.get(position).getAuthor());
+        holder1.mTv_comment_content.setText(mData.get(position).getContent());
+        holder1.mTv_comment_time.setText(DateUtil.formatTime2String(mData.get(position).getTime()));
+        holder1.mTv_comment_like.setText(mData.get(position).getLikes()+"");
+        if (mData.get(position).getReply_to() != null && mData.get(position).getReply_to().getId() != 0){
+            String hui = "@"+mData.get(position).getReply_to().getAuthor()+":"+mData.get(position).getReply_to().getContent();
+            holder1.mTv_comment_reply.setText(hui);
+        }
     }
 
     @Override
@@ -60,20 +75,21 @@ public class MyPIngAdapter extends XRecyclerView.Adapter{
 
     class MyViewHolder extends XRecyclerView.ViewHolder {
 
-
-        private final ImageView mIv;
-        private final TextView mTvname;
-        private final TextView mTvbody;
-        private final TextView mTvtime;
-        private final TextView mTvlike;
+        private final ImageView mCiv_comment_face;
+        private final TextView mTvcomment_name;
+        private final TextView mTv_comment_content;
+        private final TextView mTv_comment_reply;
+        private final TextView mTv_comment_time;
+        private final TextView mTv_comment_like;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            mIv = itemView.findViewById(R.id.iv);
-            mTvname = itemView.findViewById(R.id.tv_name);
-            mTvbody = itemView.findViewById(R.id.tv_body);
-            mTvtime = itemView.findViewById(R.id.tv_time);
-            mTvlike = itemView.findViewById(R.id.tv_like);
+            mCiv_comment_face = itemView.findViewById(R.id.civ_comment_face);
+            mTvcomment_name = itemView.findViewById(R.id.tvcomment_name);
+            mTv_comment_content = itemView.findViewById(R.id.tv_comment_content);
+            mTv_comment_reply = itemView.findViewById(R.id.tv_comment_reply);
+            mTv_comment_time = itemView.findViewById(R.id.tv_comment_time);
+            mTv_comment_like = itemView.findViewById(R.id.tv_comment_like);
 
         }
     }

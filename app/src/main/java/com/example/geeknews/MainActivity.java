@@ -8,15 +8,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.Toast;
-
 import com.example.geeknews.beas.activity.SimpleActivity;
 import com.example.geeknews.fragments.GanhuoFragment;
 import com.example.geeknews.fragments.ShujuFragment;
@@ -24,11 +18,6 @@ import com.example.geeknews.fragments.V2ExFragment;
 import com.example.geeknews.fragments.WeixinFragment;
 import com.example.geeknews.fragments.ZhihuFragment;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

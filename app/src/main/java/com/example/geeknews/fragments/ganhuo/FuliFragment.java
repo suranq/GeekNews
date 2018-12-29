@@ -1,6 +1,7 @@
 package com.example.geeknews.fragments.ganhuo;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -12,12 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.geeknews.R;
+import com.example.geeknews.activitys.weixin.ganhuo.MeiziActivity;
 import com.example.geeknews.adapters.ganhuo.MyFuLiAdapter;
 import com.example.geeknews.api.GanhuoApi;
 import com.example.geeknews.beans.zhihu.ganhuo.GanAndroid;
 import com.example.geeknews.beas.fragment.BaseFragment;
 import com.example.geeknews.presenter.GanhuoPresenter;
 import com.example.geeknews.view.GanhuoView;
+import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FuliFragment extends BaseFragment<GanhuoView<GanAndroid>, GanhuoPresenter<GanhuoView<GanAndroid>>> implements GanhuoView<GanAndroid>, XRecyclerView.LoadingListener {
+public class FuliFragment extends BaseFragment<GanhuoView<String>, GanhuoPresenter<GanhuoView<String>>> implements GanhuoView<String>, XRecyclerView.LoadingListener {
 
     @BindView(R.id.xrlv)
     XRecyclerView mXrlv;
@@ -65,6 +68,16 @@ public class FuliFragment extends BaseFragment<GanhuoView<GanAndroid>, GanhuoPre
         mMyFuLiAdapter = new MyFuLiAdapter(mData,getContext());
         mXrlv.setAdapter(mMyFuLiAdapter);
         mXrlv.setLoadingListener(this);
+
+        mMyFuLiAdapter.setOnItemListener(new MyFuLiAdapter.OnItemListener() {
+            @Override
+            public void OnItemListener(GanAndroid.ResultsBean resultsBean) {
+                String url = resultsBean.getUrl();
+                Intent intent = new Intent(getContext(), MeiziActivity.class);
+                intent.putExtra("meinv",url);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -78,9 +91,14 @@ public class FuliFragment extends BaseFragment<GanhuoView<GanAndroid>, GanhuoPre
     }
 
     @Override
-    public void show(GanAndroid ganAndroid) {
-        Log.e("5555555555",ganAndroid.getResults().get(2).getUrl());
-        mMyFuLiAdapter.setData(ganAndroid.getResults(),mPage);
+    public void show(String s, GanhuoApi ganhuoApi) {
+        Gson gson = new Gson();
+        switch (ganhuoApi) {
+            case JISHU:
+                GanAndroid ganAndroid = gson.fromJson(s, GanAndroid.class);
+                mMyFuLiAdapter.setData(ganAndroid.getResults(),mPage);
+                break;
+        }
     }
 
     @Override
@@ -89,22 +107,8 @@ public class FuliFragment extends BaseFragment<GanhuoView<GanAndroid>, GanhuoPre
     }
 
     @Override
-    protected GanhuoPresenter<GanhuoView<GanAndroid>> createPresenter() {
+    protected GanhuoPresenter<GanhuoView<String>> createPresenter() {
         return new GanhuoPresenter<>();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override
