@@ -50,12 +50,6 @@ public class MyFuLiAdapter extends XRecyclerView.Adapter{
                 }
             }
         });
-        holder1.mIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     @Override

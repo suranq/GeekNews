@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
 import com.example.geeknews.beas.activity.SimpleActivity;
 
@@ -26,6 +27,7 @@ public class MeiziActivity extends SimpleActivity {
     protected void initData() {
         Intent intent = getIntent();
         String meinv = intent.getStringExtra("meinv");
+        Glide.with(MeiziActivity.this).load(meinv).into(mIvGirlDetail);
     }
     @Override
     protected int createLayoutId() {

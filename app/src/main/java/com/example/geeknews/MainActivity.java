@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import com.example.geeknews.beas.activity.SimpleActivity;
 import com.example.geeknews.fragments.GanhuoFragment;
+import com.example.geeknews.fragments.GuanFragment;
+import com.example.geeknews.fragments.ShezhiFragment;
+import com.example.geeknews.fragments.ShouFragment;
 import com.example.geeknews.fragments.ShujuFragment;
 import com.example.geeknews.fragments.V2ExFragment;
 import com.example.geeknews.fragments.WeixinFragment;
@@ -144,11 +147,17 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
             searchMenuItem.setVisible(false);
             mToolbar.setTitle("V2EX");
         } else if (id == R.id.drawer_like) {
-
+            fragmentTransaction.replace(R.id.fl_content,new ShouFragment());
+            searchMenuItem.setVisible(false);
+            mToolbar.setTitle("收藏");
         } else if (id == R.id.drawer_setting) {
-
+            fragmentTransaction.replace(R.id.fl_content,new ShezhiFragment());
+            searchMenuItem.setVisible(false);
+            mToolbar.setTitle("设置");
         } else if (id == R.id.drawer_about) {
-
+            fragmentTransaction.replace(R.id.fl_content,new GuanFragment());
+            searchMenuItem.setVisible(false);
+            mToolbar.setTitle("关于");
         }
 
         fragmentTransaction.commit();

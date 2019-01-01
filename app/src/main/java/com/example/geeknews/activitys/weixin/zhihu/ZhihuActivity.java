@@ -35,6 +35,7 @@ import java.net.URL;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresenter<ZhihuView<String>>> implements ZhihuView<String> {
 
@@ -121,17 +122,12 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
                 ZhihuDetailBean zhihuDetailBean = gson.fromJson(s, ZhihuDetailBean.class);
 
                 EventBus.getDefault().postSticky(zhihuDetailBean.getId() + "");
-//                WebSettings settings = mViewMain.getSettings();
-//                settings.setJavaScriptEnabled(true);
-//                mViewMain.loadUrl(mZhihuDetailBean.getShare_url());
-
                 Glide.with(this).load(zhihuDetailBean.getImage()).into(mDetailBarImage);
 
                 mViewToolbar.setTitle(zhihuDetailBean.getTitle());
                 setSupportActionBar(mViewToolbar);
                 ActionBar actionBar = getSupportActionBar();
                 actionBar.setDisplayHomeAsUpEnabled(true);
-
 
                 get(zhihuDetailBean);
                 break;
@@ -159,7 +155,6 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
             @Override
             public void run() {
                 Html.ImageGetter imageGetter = new Html.ImageGetter() {
-
                     private URL mUrl;
 
                     @Override
@@ -200,11 +195,8 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
         return new ZhihuPresenter<>();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
+    @OnClick(R.id.fab_like)
+    public void onViewClicked() {
 
+    }
 }

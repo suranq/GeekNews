@@ -1,31 +1,41 @@
 package com.example.geeknews.adapters.shuju;
 
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.geeknews.R;
 import com.example.geeknews.api.ShujuApi;
 import com.example.geeknews.beans.zhihu.shuju.ShujuTitle;
 import com.example.geeknews.beas.activity.BaseActivity;
 import com.example.geeknews.presenter.ShujuPresenter;
+import com.example.geeknews.utils.DefaultItemTouchHelpCallback;
 import com.example.geeknews.view.ShujuView;
 import com.google.gson.Gson;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ShujuActivity extends BaseActivity<ShujuView<String>, ShujuPresenter<ShujuView<String>>> implements ShujuView<String> {
 
-    @BindView(R.id.xrlv)
-    XRecyclerView mXrlv;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+    @BindView(R.id.xrlv)
+    RecyclerView mXrlv;
+    private ShujuLanAdapter mShujuLanAdapter;
+    private List<String> mData = new ArrayList<>();
+    DefaultItemTouchHelpCallback mCallback;
+    private List<String> mResult;
 
     @Override
     protected void initData() {
@@ -36,6 +46,45 @@ public class ShujuActivity extends BaseActivity<ShujuView<String>, ShujuPresente
         mToolbar.setTitle("首页特别展示");
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        mXrlv.setLayoutManager(manager);
+        mXrlv.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+
+        mShujuLanAdapter = new ShujuLanAdapter(mData, ShujuActivity.this);
+        mXrlv.setAdapter(mShujuLanAdapter);
+
+        mCallback = new DefaultItemTouchHelpCallback(new DefaultItemTouchHelpCallback.OnItemTouchCallbackListener() {
+            @Override
+            public void onSwiped(int adapterPosition) {
+
+            }
+
+            @Override
+            public boolean onMove(int srcPosition, int targetPosition) {
+                if (mResult != null){
+                    Collections.swap(mResult,srcPosition,targetPosition);
+                    mShujuLanAdapter.notifyItemMoved(srcPosition,targetPosition);
+                    return true;
+                }
+                return false;
+            }
+        });
+        mCallback.setDragEnable(true);
+        mCallback.setSwipeEnable(true);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mCallback);
+        itemTouchHelper.attachToRecyclerView(mXrlv);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -50,7 +99,9 @@ public class ShujuActivity extends BaseActivity<ShujuView<String>, ShujuPresente
         switch (shujuApi) {
             case TITLE:
                 ShujuTitle shujuTitle = gson.fromJson(s, ShujuTitle.class);
+                mResult = shujuTitle.getRESULT();
                 Log.e("sssssss", shujuTitle.getRESULT().get(1));
+                mShujuLanAdapter.setData(shujuTitle.getRESULT());
                 break;
         }
     }
