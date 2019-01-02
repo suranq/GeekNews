@@ -108,11 +108,4 @@ public class ZhuanlanActivity extends BaseActivity<ZhihuView<String>, ZhihuPrese
     protected ZhihuPresenter<ZhihuView<String>> createPresenter() {
         return new ZhihuPresenter<>();
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

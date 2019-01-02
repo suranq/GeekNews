@@ -42,7 +42,6 @@ import butterknife.Unbinder;
  */
 public class WeixinFragment extends BaseFragment<WeixinView<WeiXinBean>, WeixinPresenter<WeixinView<WeiXinBean>>> implements WeixinView<WeiXinBean>, XRecyclerView.LoadingListener {
 
-
     @BindView(R.id.xrlv)
     XRecyclerView mXrlv;
     Unbinder unbinder;
@@ -89,6 +88,7 @@ public class WeixinFragment extends BaseFragment<WeixinView<WeiXinBean>, WeixinP
             public void OnItemlistener(WeiXinBean.NewslistBean newslistBean) {
                 Intent intent = new Intent(getContext(), WeixinActivity.class);
                 intent.putExtra("url",newslistBean.getUrl());
+                intent.putExtra("image",newslistBean.getPicUrl());
                 intent.putExtra("title",newslistBean.getTitle());
                 startActivity(intent);
             }
@@ -117,24 +117,9 @@ public class WeixinFragment extends BaseFragment<WeixinView<WeiXinBean>, WeixinP
         });
     }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
     @Override
     protected WeixinPresenter<WeixinView<WeiXinBean>> createPresenter() {
         return new WeixinPresenter<>();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override

@@ -23,6 +23,8 @@ import com.example.geeknews.api.ZhihuApi;
 import com.example.geeknews.beans.zhihu.DetailExtraBean;
 import com.example.geeknews.beans.zhihu.ZhihuDetailBean;
 import com.example.geeknews.beas.activity.BaseActivity;
+import com.example.geeknews.greendao.DaoNews;
+import com.example.geeknews.greendao.GreenDaoHelep;
 import com.example.geeknews.presenter.ZhihuPresenter;
 import com.example.geeknews.view.ZhihuView;
 import com.google.gson.Gson;
@@ -65,6 +67,7 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
     ImageView mDetailBarImage;
 
     private boolean isBottomShow = true;
+    private ZhihuDetailBean mZhihuDetailBean;
 
     @Override
     protected void initData() {
@@ -119,17 +122,17 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
         Gson gson = new Gson();
         switch (zhihuApi) {
             case RIBAOXIANGQING:
-                ZhihuDetailBean zhihuDetailBean = gson.fromJson(s, ZhihuDetailBean.class);
+                mZhihuDetailBean = gson.fromJson(s, ZhihuDetailBean.class);
 
-                EventBus.getDefault().postSticky(zhihuDetailBean.getId() + "");
-                Glide.with(this).load(zhihuDetailBean.getImage()).into(mDetailBarImage);
+                EventBus.getDefault().postSticky(mZhihuDetailBean.getId() + "");
+                Glide.with(this).load(mZhihuDetailBean.getImage()).into(mDetailBarImage);
 
-                mViewToolbar.setTitle(zhihuDetailBean.getTitle());
+                mViewToolbar.setTitle(mZhihuDetailBean.getTitle());
                 setSupportActionBar(mViewToolbar);
                 ActionBar actionBar = getSupportActionBar();
                 actionBar.setDisplayHomeAsUpEnabled(true);
 
-                get(zhihuDetailBean);
+                get(mZhihuDetailBean);
                 break;
             case EWAIXINXI:
                 final DetailExtraBean detailExtraBean = gson.fromJson(s, DetailExtraBean.class);
@@ -197,6 +200,14 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
 
     @OnClick(R.id.fab_like)
     public void onViewClicked() {
+        DaoNews daoNews = new DaoNews(null, mZhihuDetailBean.getId(), mZhihuDetailBean.getImage(), mZhihuDetailBean.getTitle(), mZhihuDetailBean.getShare_url(), 0, null);
+        if (mFabLike.isSelected()){
+            mFabLike.setSelected(false);
+            GreenDaoHelep.getInsh().delect(daoNews);
+        }else {
+            mFabLike.setSelected(true);
+            GreenDaoHelep.getInsh().insert(daoNews);
+        }
 
     }
 }

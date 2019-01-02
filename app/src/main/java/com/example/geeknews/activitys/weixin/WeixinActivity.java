@@ -11,9 +11,12 @@ import android.widget.ImageView;
 
 import com.example.geeknews.R;
 import com.example.geeknews.beas.activity.SimpleActivity;
+import com.example.geeknews.greendao.DaoNews;
+import com.example.geeknews.greendao.GreenDaoHelep;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class WeixinActivity extends SimpleActivity {
 
@@ -23,20 +26,24 @@ public class WeixinActivity extends SimpleActivity {
     Toolbar mToolbat;
     @BindView(R.id.wv)
     WebView mWv;
+    private String mTitle;
+    private String mUrl;
+    private String mImage;
 
     @Override
     protected void initData() {
         Intent intent = getIntent();
-        String title = intent.getStringExtra("title");
-        String url = intent.getStringExtra("url");
-        mToolbat.setTitle(title);
+        mTitle = intent.getStringExtra("title");
+        mUrl = intent.getStringExtra("url");
+        mImage = intent.getStringExtra("image");
+        mToolbat.setTitle(mTitle);
         setSupportActionBar(mToolbat);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         WebSettings settings = mWv.getSettings();
         settings.setJavaScriptEnabled(true);
-        mWv.loadUrl(url);
+        mWv.loadUrl(mUrl);
     }
 
     @Override
@@ -54,10 +61,15 @@ public class WeixinActivity extends SimpleActivity {
         return R.layout.activity_weixin;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+    @OnClick(R.id.iv)
+    public void onViewClicked() {
+        DaoNews daoNews = new DaoNews(null, 0, mImage, mTitle, mUrl, 0, null);
+        if (mIv.isSelected()){
+            mIv.setSelected(false);
+            GreenDaoHelep.getInsh().delect(daoNews);
+        }else {
+            mIv.setSelected(true);
+            GreenDaoHelep.getInsh().insert(daoNews);
+        }
     }
 }

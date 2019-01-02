@@ -14,11 +14,14 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/iv"
+            android:src="@drawable/selector_like"
+            android:layout_gravity="right"
+            android:layout_marginRight="20dp"
             android:layout_width="20dp"
             android:layout_height="20dp" />
     </android.support.v7.widget.Toolbar>
     <WebView
         android:id="@+id/wv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></WebView>
+        android:layout_height="match_parent"/>
 </LinearLayout>

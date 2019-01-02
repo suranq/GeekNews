@@ -2,30 +2,18 @@ package com.example.geeknews.fragments;
 
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.geeknews.R;
 import com.example.geeknews.adapters.MyFragmentAdapter;
 import com.example.geeknews.adapters.shuju.ShujuActivity;
-import com.example.geeknews.adapters.shuju.ShujuLanAdapter;
-import com.example.geeknews.api.ShujuApi;
-import com.example.geeknews.beans.zhihu.shuju.ShujuTitle;
-import com.example.geeknews.beas.fragment.BaseFragment;
 import com.example.geeknews.beas.fragment.SimpleFragment;
 import com.example.geeknews.fragments.shuju.ShujufuFragment;
-import com.example.geeknews.presenter.ShujuPresenter;
-import com.example.geeknews.view.ShujuView;
-import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,14 +25,13 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ShujuFragment extends SimpleFragment{
+public class ShujuFragment extends SimpleFragment {
 
 
     @BindView(R.id.tab)
@@ -57,6 +44,9 @@ public class ShujuFragment extends SimpleFragment{
     List<String> mData = new ArrayList<>();
     private ArrayList<Fragment> mFragments = new ArrayList<>();
     private List<String> mShuju;
+    private List<String> mResult;
+    private boolean isShow = true;
+    private Map<String, Object> mMap;
 
     public ShujuFragment() {
         // Required empty public constructor
@@ -69,7 +59,8 @@ public class ShujuFragment extends SimpleFragment{
 
     @Override
     protected void load() {
-
+        mMap = new HashMap<>();
+        mMap.put("appKey", "4f359e9003324dd0a6cff75e229ebbc3");
     }
 
     @Override
