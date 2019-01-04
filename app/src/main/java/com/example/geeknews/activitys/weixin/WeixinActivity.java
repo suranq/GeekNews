@@ -14,6 +14,8 @@ import com.example.geeknews.beas.activity.SimpleActivity;
 import com.example.geeknews.greendao.DaoNews;
 import com.example.geeknews.greendao.GreenDaoHelep;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -29,6 +31,7 @@ public class WeixinActivity extends SimpleActivity {
     private String mTitle;
     private String mUrl;
     private String mImage;
+    private String From = "微信";
 
     @Override
     protected void initData() {
@@ -44,6 +47,11 @@ public class WeixinActivity extends SimpleActivity {
         WebSettings settings = mWv.getSettings();
         settings.setJavaScriptEnabled(true);
         mWv.loadUrl(mUrl);
+
+        List<DaoNews> daoNews = GreenDaoHelep.getInsh().selectS(mTitle);
+        for (int i = 0; i < daoNews.size(); i++) {
+            mIv.setSelected(daoNews.get(i).getIsShow());
+        }
     }
 
     @Override
@@ -63,12 +71,15 @@ public class WeixinActivity extends SimpleActivity {
 
     @OnClick(R.id.iv)
     public void onViewClicked() {
-        DaoNews daoNews = new DaoNews(null, 0, mImage, mTitle, mUrl, 0, null);
-        if (mIv.isSelected()){
+        if (mIv.isSelected()) {
             mIv.setSelected(false);
-            GreenDaoHelep.getInsh().delect(daoNews);
-        }else {
+            List<DaoNews> daoNews = GreenDaoHelep.getInsh().selectS(mTitle);
+            for (int i = 0; i < daoNews.size(); i++) {
+                GreenDaoHelep.getInsh().delect(daoNews.get(i));
+            }
+        } else {
             mIv.setSelected(true);
+            DaoNews daoNews = new DaoNews(null, 0, mImage, mTitle, mUrl, 0, null, true,From);
             GreenDaoHelep.getInsh().insert(daoNews);
         }
     }

@@ -13,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.geeknews.R;
+import com.example.geeknews.activitys.weixin.WeixinActivity;
 import com.example.geeknews.activitys.weixin.zhihu.ZhihuActivity;
+import com.example.geeknews.adapters.shuju.ShujuActivity;
 import com.example.geeknews.beas.fragment.SimpleFragment;
 import com.example.geeknews.greendao.DaoAdapter;
 import com.example.geeknews.greendao.DaoNews;
@@ -30,7 +32,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ShouFragment extends SimpleFragment {
+public class ShouFragment extends SimpleFragment implements ShujuActivity.OnItemListener {
 
     Unbinder unbinder;
     @BindView(R.id.xrlv)
@@ -55,6 +57,7 @@ public class ShouFragment extends SimpleFragment {
 
     @Override
     protected void initData() {
+        ShujuActivity.setOnItemListener(this);
         final List<DaoNews> daoNews = GreenDaoHelep.getInsh().selectAll();
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mXrlv.setLayoutManager(manager);
@@ -66,9 +69,17 @@ public class ShouFragment extends SimpleFragment {
         mDaoAdapter.setOnItemListener(new DaoAdapter.OnItemListener() {
             @Override
             public void OnItemListener(DaoNews daoNews) {
-                Intent intent = new Intent(getContext(), ZhihuActivity.class);
-                intent.putExtra("xiangqing",daoNews.getIda());
-                startActivity(intent);
+                if (daoNews.getFrom().equals("知乎")) {
+                    Intent intent = new Intent(getContext(), ZhihuActivity.class);
+                    intent.putExtra("xiangqing", daoNews.getIda());
+                    startActivity(intent);
+                } else if (daoNews.getFrom().equals("微信")) {
+                    Intent intent = new Intent(getContext(), WeixinActivity.class);
+                    intent.putExtra("url", daoNews.getUrl());
+                    intent.putExtra("image", daoNews.getImage());
+                    intent.putExtra("title", daoNews.getTitle());
+                    startActivity(intent);
+                }
             }
         });
 
@@ -88,9 +99,22 @@ public class ShouFragment extends SimpleFragment {
                 if (daoNews != null) {
                     // 更换数据库中的数据Item的位置
                     boolean isPlus = srcPosition < targetPosition;
-                    Collections.swap(daoNews,srcPosition,targetPosition);
-                    mDaoAdapter.notifyItemMoved(srcPosition,targetPosition);
-                return true;
+                    Collections.swap(daoNews, srcPosition, targetPosition);
+                    mDaoAdapter.notifyItemMoved(srcPosition, targetPosition);
+
+                    Long id = daoNews.get(srcPosition).getId();
+                    Long id1 = daoNews.get(targetPosition).getId();
+
+                    DaoNews daoNews1 = daoNews.get(srcPosition);
+                    DaoNews daoNews2 = daoNews.get(targetPosition);
+
+                    daoNews1.setId(id1);
+                    GreenDaoHelep.getInsh().updata(daoNews1);
+
+                    daoNews2.setId(id);
+                    GreenDaoHelep.getInsh().updata(daoNews2);
+
+                    return true;
                 }
                 return false;
             }
@@ -100,5 +124,15 @@ public class ShouFragment extends SimpleFragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mCallback);
         itemTouchHelper.attachToRecyclerView(mXrlv);
 
+    }
+
+    @Override
+    public void OnItemListener() {
+        List<DaoNews> daoNews = GreenDaoHelep.getInsh().selectAll();
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        mXrlv.setLayoutManager(manager);
+        mXrlv.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        mDaoAdapter = new DaoAdapter(daoNews, getContext());
+        mXrlv.setAdapter(mDaoAdapter);
     }
 }

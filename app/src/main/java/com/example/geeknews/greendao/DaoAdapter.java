@@ -33,7 +33,7 @@ public class DaoAdapter extends XRecyclerView.Adapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflate = LayoutInflater.from(mContext).inflate(R.layout.ribaotem, null, false);
+        View inflate = LayoutInflater.from(mContext).inflate(R.layout.shoucangitem, null, false);
         MyViewHolder myViewHolder = new MyViewHolder(inflate);
         return myViewHolder;
     }
@@ -43,7 +43,7 @@ public class DaoAdapter extends XRecyclerView.Adapter{
         MyViewHolder holder1 = (MyViewHolder) holder;
         Glide.with(mContext).load(mDaoNews.get(position).getImage()).into(holder1.mIv);
         holder1.mTv.setText(mDaoNews.get(position).getTitle());
-
+        holder1.mTv2.setText("来自："+mDaoNews.get(position).getFrom());
         holder1.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,11 +58,13 @@ public class DaoAdapter extends XRecyclerView.Adapter{
 
         private final TextView mTv;
         private final ImageView mIv;
+        private final TextView mTv2;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mTv = itemView.findViewById(R.id.tv);
             mIv = itemView.findViewById(R.id.iv);
+            mTv2 = itemView.findViewById(R.id.tv2);
         }
     }
 

@@ -13,47 +13,51 @@ import java.util.List;
 
 public class GreenDaoHelep {
     private static GreenDaoHelep mDataBeasHelep;
-        private DaoNewsDao mDaoNewsDao;
+    private DaoNewsDao mDaoNewsDao;
 
-        public GreenDaoHelep() {
-            DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(Myapp.getMyapp(), "dgc.db");
-            DaoMaster daoMaster = new DaoMaster(openHelper.getWritableDatabase());
-            DaoSession daoSession = daoMaster.newSession();
-            mDaoNewsDao = daoSession.getDaoNewsDao();
-        }
+    public GreenDaoHelep() {
+        DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(Myapp.getMyapp(), "dgc.db");
+        DaoMaster daoMaster = new DaoMaster(openHelper.getWritableDatabase());
+        DaoSession daoSession = daoMaster.newSession();
+        mDaoNewsDao = daoSession.getDaoNewsDao();
+    }
 
-        public static GreenDaoHelep getInsh() {
-            if (mDataBeasHelep == null) {
-                synchronized (GreenDaoHelep.class) {
-                    if (mDataBeasHelep == null) {
-                        mDataBeasHelep = new GreenDaoHelep();
-                    }
+    public static GreenDaoHelep getInsh() {
+        if (mDataBeasHelep == null) {
+            synchronized (GreenDaoHelep.class) {
+                if (mDataBeasHelep == null) {
+                    mDataBeasHelep = new GreenDaoHelep();
                 }
             }
-            return mDataBeasHelep;
         }
+        return mDataBeasHelep;
+    }
 
-        public void insert(DaoNews daoNews){
-            mDaoNewsDao.insert(daoNews);
-        }
+    public void insert(DaoNews daoNews) {
+        mDaoNewsDao.insert(daoNews);
+    }
 
-        public void delect(DaoNews daoNews){
-            mDaoNewsDao.delete(daoNews);
-        }
+    public void delect(DaoNews daoNews) {
+        mDaoNewsDao.delete(daoNews);
+    }
 
-        public void updata(DaoNews daoNews){
-            mDaoNewsDao.update(daoNews);
-        }
+    public void updata(DaoNews daoNews) {
+        mDaoNewsDao.update(daoNews);
+    }
 
-        public List<DaoNews> selectAll(){
-            return mDaoNewsDao.queryBuilder().list();
-        }
+    public List<DaoNews> selectAll() {
+        return mDaoNewsDao.queryBuilder().list();
+    }
 
-        public List<DaoNews>selectPage(int page,int count){
-            return mDaoNewsDao.queryBuilder().offset(page * count).limit(count).list();
-        }
+    public List<DaoNews> selectPage(int page, int count) {
+        return mDaoNewsDao.queryBuilder().offset(page * count).limit(count).list();
+    }
 
-        public List<DaoNews>selectS(String s){
-            return mDaoNewsDao.queryBuilder().where(DaoNewsDao.Properties.Title.eq(s)).list();
-        }
+    public List<DaoNews> selectS(String s) {
+        return mDaoNewsDao.queryBuilder().where(DaoNewsDao.Properties.Title.eq(s)).list();
+    }
+    public List<DaoNews> selectId(String s) {
+        return mDaoNewsDao.queryBuilder().where(DaoNewsDao.Properties.Ida.eq(s)).list();
+    }
 }
+

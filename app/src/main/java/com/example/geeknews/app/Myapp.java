@@ -12,6 +12,7 @@ public class Myapp extends Application{
     public void onCreate() {
         super.onCreate();
         sMyapp = this;
+
     }
 
     public static Myapp getMyapp(){

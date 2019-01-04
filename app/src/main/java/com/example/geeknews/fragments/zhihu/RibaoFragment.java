@@ -98,12 +98,20 @@ public class RibaoFragment extends BaseFragment<ZhihuView<String>, ZhihuPresente
         mMyXrlvAdapter.setOnItemListener(new MyXrlvAdapter.OnItemListener() {
             @Override
             public void OnItemListener(DailyListBean.StoriesBean storiesBean, int position) {
+                mMyXrlvAdapter.setReadState(position, true);
+                if (mMyXrlvAdapter.getisBoot()) {
+                    mMyXrlvAdapter.notifyItemChanged(position + 1);
+                } else {
+                    mMyXrlvAdapter.notifyItemChanged(position + 2);
+                }
+
                 Log.e("22222", storiesBean.getId() + "");
                 Intent intent = new Intent(getContext(), ZhihuActivity.class);
                 intent.putExtra("xiangqing", storiesBean.getId());
                 startActivity(intent);
             }
         });
+
 
     }
 
@@ -161,8 +169,8 @@ public class RibaoFragment extends BaseFragment<ZhihuView<String>, ZhihuPresente
             case WANGQIRIBAO:
                 DailyBeforeListBean dailyBeforeListBean = gson.fromJson(s, DailyBeforeListBean.class);
                 Log.e("wwwwwwwww", dailyBeforeListBean.getStories().get(1).getTitle());
-//              mMyAdapter.setData(dailyBeforeListBean.getStories());
                 mMyXrlvAdapter.setWang(dailyBeforeListBean);
+                mMyXrlvAdapter.addDailyBeforeListBean(dailyBeforeListBean);
                 break;
         }
 

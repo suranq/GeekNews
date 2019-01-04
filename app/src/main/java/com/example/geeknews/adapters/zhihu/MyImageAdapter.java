@@ -46,7 +46,7 @@ public class MyImageAdapter extends PagerAdapter{
         ImageView ivImage = (ImageView) inflate.findViewById(R.id.iv_top_image);
         TextView tvTitle = (TextView) inflate.findViewById(R.id.tv_top_title);
         Glide.with(mContext).load(mData.get(position).getImage()).into(ivImage);
-
+        tvTitle.setText(mData.get(position).getTitle());
         container.addView(inflate);
         return inflate;
     }

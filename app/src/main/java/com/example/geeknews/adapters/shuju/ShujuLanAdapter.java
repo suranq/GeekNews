@@ -3,7 +3,6 @@ package com.example.geeknews.adapters.shuju;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +10,12 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.geeknews.R;
+import com.example.geeknews.greendao.DaoNews;
+import com.example.geeknews.greendao.GreenDaoHelep;
+import com.example.geeknews.shujudao.ShujuKu;
+import com.example.geeknews.shujudao.Shujudao;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,13 +23,10 @@ import java.util.List;
  */
 
 public class ShujuLanAdapter extends XRecyclerView.Adapter {
-    private List<String> mData;
+    private List<Shujudao> mData;
     private final ShujuActivity mShujuActivity;
-    public static boolean mIsChecked;
-    private List<String> shuju = new ArrayList<>();
 
-    public ShujuLanAdapter(List<String> data, ShujuActivity shujuActivity) {
-
+    public ShujuLanAdapter(List<Shujudao> data, ShujuActivity shujuActivity) {
         mData = data;
         mShujuActivity = shujuActivity;
     }
@@ -45,17 +42,20 @@ public class ShujuLanAdapter extends XRecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
-        holder1.mTv.setText(mData.get(position));
+        holder1.mTv.setText(mData.get(position).getTitle());
+        holder1.mSc.setChecked(mData.get(position).getIsShow());
         holder1.mSc.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    shuju.add(mData.get(position));
-                    Log.e("tttttt",mData.get(position));
-                }
+                Shujudao shujudao = mData.get(position);
+                shujudao.setIsShow(isChecked);
+                ShujuKu.getInsh().updata(shujudao);
+
+
             }
         });
-        EventBus.getDefault().postSticky(shuju);
+        List<DaoNews> daoNews = GreenDaoHelep.getInsh().selectAll();
+
     }
 
     @Override
@@ -76,10 +76,5 @@ public class ShujuLanAdapter extends XRecyclerView.Adapter {
             mTv = itemView.findViewById(R.id.tv);
             mSc = itemView.findViewById(R.id.sc);
         }
-    }
-
-    public void setData(List<String> data) {
-        mData = data;
-        notifyDataSetChanged();
     }
 }

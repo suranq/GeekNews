@@ -14,11 +14,14 @@ import com.example.geeknews.api.ShujuApi;
 import com.example.geeknews.beans.zhihu.shuju.ShujuTitle;
 import com.example.geeknews.beas.activity.BaseActivity;
 import com.example.geeknews.presenter.ShujuPresenter;
+import com.example.geeknews.shujudao.Shujudao;
 import com.example.geeknews.utils.DefaultItemTouchHelpCallback;
 import com.example.geeknews.view.ShujuView;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,32 +31,32 @@ import butterknife.BindView;
 
 public class ShujuActivity extends BaseActivity<ShujuView<String>, ShujuPresenter<ShujuView<String>>> implements ShujuView<String> {
 
+    private static OnItemListener sListener;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.xrlv)
     RecyclerView mXrlv;
     private ShujuLanAdapter mShujuLanAdapter;
-    private List<String> mData = new ArrayList<>();
     DefaultItemTouchHelpCallback mCallback;
     private List<String> mResult;
 
+
     @Override
     protected void initData() {
+        EventBus.getDefault().register(this);
         Map<String, Object> map = new HashMap<>();
         map.put("appKey", "4f359e9003324dd0a6cff75e229ebbc3");
         presenter.getShuju("categories", map, ShujuApi.TITLE);
 
         mToolbar.setTitle("首页特别展示");
         setSupportActionBar(mToolbar);
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         mXrlv.setLayoutManager(manager);
         mXrlv.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-
-        mShujuLanAdapter = new ShujuLanAdapter(mData, ShujuActivity.this);
-        mXrlv.setAdapter(mShujuLanAdapter);
 
         mCallback = new DefaultItemTouchHelpCallback(new DefaultItemTouchHelpCallback.OnItemTouchCallbackListener() {
             @Override
@@ -81,7 +84,9 @@ public class ShujuActivity extends BaseActivity<ShujuView<String>, ShujuPresente
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                sListener.OnItemListener();
                 finish();
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -92,6 +97,17 @@ public class ShujuActivity extends BaseActivity<ShujuView<String>, ShujuPresente
     protected int createLayoutId() {
         return R.layout.activity_shuju;
     }
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public void getShuju(List<Shujudao> lilits){
+        mShujuLanAdapter = new ShujuLanAdapter(lilits, ShujuActivity.this);
+        mXrlv.setAdapter(mShujuLanAdapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     public void show(String s, ShujuApi shujuApi) {
@@ -101,7 +117,6 @@ public class ShujuActivity extends BaseActivity<ShujuView<String>, ShujuPresente
                 ShujuTitle shujuTitle = gson.fromJson(s, ShujuTitle.class);
                 mResult = shujuTitle.getRESULT();
                 Log.e("sssssss", shujuTitle.getRESULT().get(1));
-                mShujuLanAdapter.setData(shujuTitle.getRESULT());
                 break;
         }
     }
@@ -114,5 +129,13 @@ public class ShujuActivity extends BaseActivity<ShujuView<String>, ShujuPresente
     @Override
     protected ShujuPresenter<ShujuView<String>> createPresenter() {
         return new ShujuPresenter<>();
+    }
+
+    public interface OnItemListener{
+        void OnItemListener();
+    }
+
+    public static void setOnItemListener(OnItemListener listener){
+        sListener = listener;
     }
 }

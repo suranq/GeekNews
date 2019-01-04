@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -34,6 +35,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +43,7 @@ import butterknife.OnClick;
 
 public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresenter<ZhihuView<String>>> implements ZhihuView<String> {
 
+    private static OnItemListener sListener;
     @BindView(R.id.detail_bar_copyright)
     TextView mDetailBarCopyright;
     @BindView(R.id.view_toolbar)
@@ -68,13 +71,22 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
 
     private boolean isBottomShow = true;
     private ZhihuDetailBean mZhihuDetailBean;
+    private boolean isShow;
+    private int mXiangqing;
+    private String From = "知乎";
 
     @Override
     protected void initData() {
         Intent intent = getIntent();
-        int xiangqing = intent.getIntExtra("xiangqing", 0);
-        Log.e("4444444444", xiangqing + "");
-        presenter.getZhihu("", xiangqing, ZhihuApi.RIBAOXIANGQING);
+        mXiangqing = intent.getIntExtra("xiangqing", 0);
+        Log.e("4444444444", mXiangqing + "");
+
+        List<DaoNews> daoNews = GreenDaoHelep.getInsh().selectId(mXiangqing + "");
+        for (int i = 0; i < daoNews.size(); i++) {
+            mFabLike.setSelected(daoNews.get(i).getIsShow());
+        }
+
+        presenter.getZhihu("", mXiangqing, ZhihuApi.RIBAOXIANGQING);
 
         mNsvScroller.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -88,7 +100,7 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
                 }
             }
         });
-        presenter.getZhihu("", xiangqing, ZhihuApi.EWAIXINXI);
+        presenter.getZhihu("", mXiangqing, ZhihuApi.EWAIXINXI);
 
     }
 
@@ -111,6 +123,9 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                if (sListener != null) {
+                    sListener.OnItemListener();
+                }
                 finish();
                 break;
         }
@@ -198,16 +213,32 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
         return new ZhihuPresenter<>();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
     @OnClick(R.id.fab_like)
     public void onViewClicked() {
-        DaoNews daoNews = new DaoNews(null, mZhihuDetailBean.getId(), mZhihuDetailBean.getImage(), mZhihuDetailBean.getTitle(), mZhihuDetailBean.getShare_url(), 0, null);
-        if (mFabLike.isSelected()){
+        if (mFabLike.isSelected()) {
             mFabLike.setSelected(false);
-            GreenDaoHelep.getInsh().delect(daoNews);
-        }else {
+            List<DaoNews> daoNews = GreenDaoHelep.getInsh().selectId(mXiangqing + "");
+            for (int i = 0; i < daoNews.size(); i++) {
+                GreenDaoHelep.getInsh().delect(daoNews.get(i));
+            }
+        } else {
+            DaoNews daoNews = new DaoNews(null, mZhihuDetailBean.getId(), mZhihuDetailBean.getImage(), mZhihuDetailBean.getTitle(), mZhihuDetailBean.getShare_url(), 0, null, true,From);
             mFabLike.setSelected(true);
             GreenDaoHelep.getInsh().insert(daoNews);
         }
+    }
 
+    public interface OnItemListener {
+        void OnItemListener();
+    }
+
+    public static void setOnItemListener(OnItemListener listener) {
+        sListener = listener;
     }
 }

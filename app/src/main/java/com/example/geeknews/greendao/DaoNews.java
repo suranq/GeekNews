@@ -24,9 +24,13 @@ public class DaoNews {
 
     private Long time;
 
-    @Generated(hash = 333682938)
+    private boolean isShow;
+
+    private String from;
+
+    @Generated(hash = 1273909320)
     public DaoNews(Long id, int ida, String image, String title, String url,
-            int type, Long time) {
+            int type, Long time, boolean isShow, String from) {
         this.id = id;
         this.ida = ida;
         this.image = image;
@@ -34,6 +38,8 @@ public class DaoNews {
         this.url = url;
         this.type = type;
         this.time = time;
+        this.isShow = isShow;
+        this.from = from;
     }
 
     @Generated(hash = 1263796077)
@@ -96,5 +102,20 @@ public class DaoNews {
         this.time = time;
     }
 
+    public boolean getIsShow() {
+        return this.isShow;
+    }
 
+    public void setIsShow(boolean isShow) {
+        this.isShow = isShow;
+    }
+
+    public String getFrom() {
+        return this.from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+    
 }
