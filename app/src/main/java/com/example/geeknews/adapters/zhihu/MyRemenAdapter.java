@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
 import com.example.geeknews.beans.zhihu.HotListBean;
+import com.example.geeknews.shezhidao.SheZhi;
+import com.example.geeknews.shezhidao.SheZhiku;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.List;
  * Created by 马明祥 on 2018/12/24.
  */
 
-public class MyRemenAdapter extends XRecyclerView.Adapter{
+public class MyRemenAdapter extends XRecyclerView.Adapter {
     private List<HotListBean.RecentBean> mData;
     private final Context mContext;
     private OnItemListener mListener;
@@ -42,13 +44,16 @@ public class MyRemenAdapter extends XRecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
-        Glide.with(mContext).load(mData.get(position).getThumbnail()).into(holder1.mIv);
+        List<SheZhi> sheZhis = SheZhiku.getInsh().selectAll();
+        if (!sheZhis.get(0).getIsWutu()) {
+            Glide.with(mContext).load(mData.get(position).getThumbnail()).into(holder1.mIv);
+        }
         holder1.mTv.setText(mData.get(position).getTitle());
 
         holder1.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null){
+                if (mListener != null) {
                     mListener.OnItemListener(mData.get(position));
                 }
             }
@@ -57,7 +62,7 @@ public class MyRemenAdapter extends XRecyclerView.Adapter{
 
     @Override
     public int getItemCount() {
-        if (mData == null){
+        if (mData == null) {
             return 0;
         }
         return mData.size();
@@ -76,18 +81,18 @@ public class MyRemenAdapter extends XRecyclerView.Adapter{
     }
 
     public void setData(List<HotListBean.RecentBean> data) {
-        if (mData != null){
+        if (mData != null) {
             mData.clear();
         }
         mData.addAll(data);
         notifyDataSetChanged();
     }
 
-    public interface OnItemListener{
+    public interface OnItemListener {
         void OnItemListener(HotListBean.RecentBean recentBean);
     }
 
-    public void setOnItemListener(OnItemListener listener){
+    public void setOnItemListener(OnItemListener listener) {
         mListener = listener;
     }
 }

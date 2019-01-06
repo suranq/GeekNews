@@ -46,7 +46,7 @@
                     android:padding="6dp"
                     android:layout_marginBottom="3dp"
                     android:textSize="12sp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/comment_line"
                     />
             </FrameLayout>
             <android.support.v7.widget.Toolbar
@@ -80,7 +80,7 @@
     <FrameLayout
         android:id="@+id/ll_detail_bottom"
         android:layout_gravity="bottom"
-        android:background="@android:color/white"
+        android:background="@color/comment_line"
         android:layout_width="match_parent"
         android:layout_height="56dp">
         <LinearLayout
@@ -134,7 +134,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_gravity="top"
-            android:background="#e8e8e8"/>
+            android:background="@color/comment_line"/>
     </FrameLayout>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_like"

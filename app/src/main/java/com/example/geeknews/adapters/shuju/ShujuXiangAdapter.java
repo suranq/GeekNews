@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
 import com.example.geeknews.beans.zhihu.shuju.ShujuData;
+import com.example.geeknews.shezhidao.SheZhi;
+import com.example.geeknews.shezhidao.SheZhiku;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.List;
  * Created by 马明祥 on 2019/1/1.
  */
 
-public class ShujuXiangAdapter extends XRecyclerView.Adapter{
+public class ShujuXiangAdapter extends XRecyclerView.Adapter {
     private List<ShujuData.RESULTBean.NewsListBean> mData;
     private final Context mContext;
 
@@ -41,17 +43,20 @@ public class ShujuXiangAdapter extends XRecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
-        if (mData.get(position).getNewsImg().contains("https")){
-            Glide.with(mContext).load(mData.get(position).getNewsImg()).into(holder1.mIv);
-        }else {
-            Glide.with(mContext).load("https"+mData.get(position).getNewsImg()).into(holder1.mIv);
+        List<SheZhi> sheZhis = SheZhiku.getInsh().selectAll();
+        if (!sheZhis.get(0).getIsWutu()) {
+            if (mData.get(position).getNewsImg().contains("https")) {
+                Glide.with(mContext).load(mData.get(position).getNewsImg()).into(holder1.mIv);
+            } else {
+                Glide.with(mContext).load("https" + mData.get(position).getNewsImg()).into(holder1.mIv);
+            }
         }
         holder1.mTv.setText(mData.get(position).getTitle());
     }
 
     @Override
     public int getItemCount() {
-        if (mData == null){
+        if (mData == null) {
             return 0;
         }
         return mData.size();

@@ -1,5 +1,6 @@
 package com.example.geeknews;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -7,10 +8,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+
 import com.example.geeknews.beas.activity.SimpleActivity;
 import com.example.geeknews.fragments.GanhuoFragment;
 import com.example.geeknews.fragments.GuanFragment;
@@ -20,6 +23,8 @@ import com.example.geeknews.fragments.ShujuFragment;
 import com.example.geeknews.fragments.V2ExFragment;
 import com.example.geeknews.fragments.WeixinFragment;
 import com.example.geeknews.fragments.ZhihuFragment;
+import com.example.geeknews.shezhidao.SheZhi;
+import com.example.geeknews.shezhidao.SheZhiku;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import butterknife.BindView;
@@ -28,7 +33,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends SimpleActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-//    @BindView(R.id.view_search)
+    //    @BindView(R.id.view_search)
 //    MaterialSearchView mViewSearch;
     @BindView(R.id.toolbar_container)
     FrameLayout mToolbarContainer;
@@ -42,10 +47,26 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
     private MenuItem mMenuItem;
     private Toolbar mToolbar;
     public static MaterialSearchView mViewsearch;
+    public static AppCompatDelegate mDelegate;
 
     //public static  MaterialSearchView mViewSearch;
     @Override
     protected void initData() {
+        SharedPreferences preferences = getSharedPreferences("shezhi", 0);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.commit();
+
+        SharedPreferences sp = getSharedPreferences("shezhi", 0);
+        boolean isss = sp.getBoolean("isss", false);
+        if (!isss) {
+            SheZhi sheZhi = new SheZhi(null, true, false, false);
+            SheZhiku.getInsh().insert(sheZhi);
+            SharedPreferences preferences1 = getSharedPreferences("shezhi", 0);
+            SharedPreferences.Editor edit1 = preferences1.edit();
+            edit1.putBoolean("isss", true);
+            edit1.commit();
+        }
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mViewsearch = findViewById(R.id.view_search);
         mToolbar.setTitle("知乎日报");
@@ -147,15 +168,16 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
             searchMenuItem.setVisible(false);
             mToolbar.setTitle("V2EX");
         } else if (id == R.id.drawer_like) {
-            fragmentTransaction.replace(R.id.fl_content,new ShouFragment());
+            fragmentTransaction.replace(R.id.fl_content, new ShouFragment());
             searchMenuItem.setVisible(false);
             mToolbar.setTitle("收藏");
         } else if (id == R.id.drawer_setting) {
-            fragmentTransaction.replace(R.id.fl_content,new ShezhiFragment());
+            fragmentTransaction.replace(R.id.fl_content, new ShezhiFragment());
             searchMenuItem.setVisible(false);
             mToolbar.setTitle("设置");
+            mDelegate = getDelegate();
         } else if (id == R.id.drawer_about) {
-            fragmentTransaction.replace(R.id.fl_content,new GuanFragment());
+            fragmentTransaction.replace(R.id.fl_content, new GuanFragment());
             searchMenuItem.setVisible(false);
             mToolbar.setTitle("关于");
         }
@@ -170,12 +192,5 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

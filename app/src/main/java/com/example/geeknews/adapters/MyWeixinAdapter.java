@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
 import com.example.geeknews.beans.zhihu.weixin.WeiXinBean;
+import com.example.geeknews.shezhidao.SheZhi;
+import com.example.geeknews.shezhidao.SheZhiku;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.List;
  * Created by 马明祥 on 2018/12/25.
  */
 
-public class MyWeixinAdapter extends XRecyclerView.Adapter{
+public class MyWeixinAdapter extends XRecyclerView.Adapter {
     private List<WeiXinBean.NewslistBean> mData;
     private final Context mContext;
     private onItemListener mListener;
@@ -42,7 +44,10 @@ public class MyWeixinAdapter extends XRecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
-        Glide.with(mContext).load(mData.get(position).getPicUrl()).into(holder1.mIv);
+        List<SheZhi> sheZhis = SheZhiku.getInsh().selectAll();
+        if (!sheZhis.get(0).getIsWutu()) {
+            Glide.with(mContext).load(mData.get(position).getPicUrl()).into(holder1.mIv);
+        }
         holder1.mTv1.setText(mData.get(position).getTitle());
         holder1.mTv2.setText(mData.get(position).getDescription());
         holder1.mTv3.setText(mData.get(position).getCtime());
@@ -50,7 +55,7 @@ public class MyWeixinAdapter extends XRecyclerView.Adapter{
         holder1.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null){
+                if (mListener != null) {
                     mListener.OnItemlistener(mData.get(position));
                 }
             }
@@ -59,7 +64,7 @@ public class MyWeixinAdapter extends XRecyclerView.Adapter{
 
     @Override
     public int getItemCount() {
-        if (mData == null){
+        if (mData == null) {
             return 0;
         }
         return mData.size();
@@ -82,17 +87,18 @@ public class MyWeixinAdapter extends XRecyclerView.Adapter{
     }
 
     public void setData(List<WeiXinBean.NewslistBean> weiXinBean, int page) {
-        if (page == 1){
+        if (page == 1) {
             mData.clear();
         }
         mData.addAll(weiXinBean);
         notifyDataSetChanged();
     }
 
-    public interface onItemListener{
+    public interface onItemListener {
         void OnItemlistener(WeiXinBean.NewslistBean newslistBean);
     }
-    public void setonItemListener(onItemListener listener){
+
+    public void setonItemListener(onItemListener listener) {
         mListener = listener;
     }
 }

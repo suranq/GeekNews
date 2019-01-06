@@ -24,6 +24,8 @@ import com.example.geeknews.beans.zhihu.ganhuo.GanAndroid;
 import com.example.geeknews.beas.fragment.BaseFragment;
 import com.example.geeknews.fragments.GanhuoFragment;
 import com.example.geeknews.presenter.GanhuoPresenter;
+import com.example.geeknews.shezhidao.SheZhi;
+import com.example.geeknews.shezhidao.SheZhiku;
 import com.example.geeknews.view.GanhuoView;
 import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -75,13 +77,13 @@ public class QianduanFragment extends BaseFragment<GanhuoView<String>, GanhuoPre
 
     @Override
     protected void initData() {
-        presenter.getGanhuo(mTech,mPage, GanhuoApi.JISHU);
-        presenter.getGanhuo("福利",1, GanhuoApi.SUIJIMEIZI);
+        presenter.getGanhuo(mTech, mPage, GanhuoApi.JISHU);
+        presenter.getGanhuo("福利", 1, GanhuoApi.SUIJIMEIZI);
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mXrlv.setLayoutManager(manager);
         mXrlv.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        mMyAndroidAdapter = new MyAndroidAdapter(mData,getContext());
+        mMyAndroidAdapter = new MyAndroidAdapter(mData, getContext());
         mXrlv.setAdapter(mMyAndroidAdapter);
         mXrlv.setLoadingListener(this);
 
@@ -89,8 +91,8 @@ public class QianduanFragment extends BaseFragment<GanhuoView<String>, GanhuoPre
             @Override
             public void OnItemListener(GanAndroid.ResultsBean resultsBean) {
                 Intent intent = new Intent(getContext(), WeixinActivity.class);
-                intent.putExtra("url",resultsBean.getUrl());
-                intent.putExtra("title",resultsBean.getDesc());
+                intent.putExtra("url", resultsBean.getUrl());
+                intent.putExtra("title", resultsBean.getDesc());
                 startActivity(intent);
             }
         });
@@ -112,12 +114,15 @@ public class QianduanFragment extends BaseFragment<GanhuoView<String>, GanhuoPre
         switch (ganhuoApi) {
             case JISHU:
                 GanAndroid ganAndroid = gson.fromJson(s, GanAndroid.class);
-                mMyAndroidAdapter.setData(ganAndroid.getResults(),mPage);
+                mMyAndroidAdapter.setData(ganAndroid.getResults(), mPage);
                 break;
             case SUIJIMEIZI:
                 GanAndroid ganAndroid1 = gson.fromJson(s, GanAndroid.class);
-                Glide.with(getContext()).load(ganAndroid1.getResults().get(0).getUrl()).into(mIvTechOrigin);
-                mTvTechCopyright.setText("by:"+ganAndroid1.getResults().get(0).getWho());
+                List<SheZhi> sheZhis = SheZhiku.getInsh().selectAll();
+                if (!sheZhis.get(0).getIsWutu()) {
+                    Glide.with(getContext()).load(ganAndroid1.getResults().get(0).getUrl()).into(mIvTechOrigin);
+                }
+                mTvTechCopyright.setText("by:" + ganAndroid1.getResults().get(0).getWho());
                 break;
         }
     }
@@ -135,14 +140,14 @@ public class QianduanFragment extends BaseFragment<GanhuoView<String>, GanhuoPre
     @Override
     public void onRefresh() {
         mPage = 1;
-        presenter.getGanhuo(mTech,mPage,GanhuoApi.JISHU);
+        presenter.getGanhuo(mTech, mPage, GanhuoApi.JISHU);
         mXrlv.refreshComplete();
     }
 
     @Override
     public void onLoadMore() {
         mPage++;
-        presenter.getGanhuo(mTech,mPage,GanhuoApi.JISHU);
+        presenter.getGanhuo(mTech, mPage, GanhuoApi.JISHU);
         mXrlv.loadMoreComplete();
     }
 }

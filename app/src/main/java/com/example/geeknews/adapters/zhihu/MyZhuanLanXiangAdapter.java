@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
 import com.example.geeknews.activitys.weixin.zhihu.ZhuanlanActivity;
 import com.example.geeknews.beans.zhihu.SectionChildListBean;
+import com.example.geeknews.shezhidao.SheZhi;
+import com.example.geeknews.shezhidao.SheZhiku;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.List;
  * Created by 马明祥 on 2018/12/26.
  */
 
-public class MyZhuanLanXiangAdapter extends XRecyclerView.Adapter{
+public class MyZhuanLanXiangAdapter extends XRecyclerView.Adapter {
     private List<SectionChildListBean.StoriesBean> mData;
     private final ZhuanlanActivity mZhuanlanActivity;
     private OnItemListener mListener;
@@ -42,13 +44,16 @@ public class MyZhuanLanXiangAdapter extends XRecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
-        Glide.with(mZhuanlanActivity).load(mData.get(position).getImages().get(0)).into(holder1.mIv);
+        List<SheZhi> sheZhis = SheZhiku.getInsh().selectAll();
+        if (!sheZhis.get(0).getIsWutu()) {
+            Glide.with(mZhuanlanActivity).load(mData.get(position).getImages().get(0)).into(holder1.mIv);
+        }
         holder1.mTv.setText(mData.get(position).getTitle());
 
         holder1.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null){
+                if (mListener != null) {
                     mListener.OnItemListener(mData.get(position));
                 }
             }
@@ -57,7 +62,7 @@ public class MyZhuanLanXiangAdapter extends XRecyclerView.Adapter{
 
     @Override
     public int getItemCount() {
-        if (mData == null){
+        if (mData == null) {
             return 0;
         }
         return mData.size();
@@ -80,11 +85,11 @@ public class MyZhuanLanXiangAdapter extends XRecyclerView.Adapter{
         notifyDataSetChanged();
     }
 
-    public interface OnItemListener{
+    public interface OnItemListener {
         void OnItemListener(SectionChildListBean.StoriesBean storiesBean);
     }
 
-    public void setOnItemListener(OnItemListener listener){
+    public void setOnItemListener(OnItemListener listener) {
         mListener = listener;
     }
 }

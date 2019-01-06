@@ -152,8 +152,8 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
             case EWAIXINXI:
                 final DetailExtraBean detailExtraBean = gson.fromJson(s, DetailExtraBean.class);
                 Log.e("zzzzzzzzzzzz", detailExtraBean.getPopularity() + "");
-                mTvDetailBottomLike.setText(detailExtraBean.getPopularity() + "");
-                mTvDetailBottomComment.setText(detailExtraBean.getComments() + "");
+                mTvDetailBottomLike.setText(detailExtraBean.getPopularity() + "点赞");
+                mTvDetailBottomComment.setText(detailExtraBean.getComments() + "条评论");
                 mTvDetailBottomComment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

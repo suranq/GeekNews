@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
+import com.example.geeknews.shezhidao.SheZhi;
+import com.example.geeknews.shezhidao.SheZhiku;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.List;
  * Created by 马明祥 on 2019/1/2.
  */
 
-public class DaoAdapter extends XRecyclerView.Adapter{
+public class DaoAdapter extends XRecyclerView.Adapter {
     private List<DaoNews> mDaoNews;
     private final Context mContext;
     private OnItemListener mListener;
@@ -41,13 +43,16 @@ public class DaoAdapter extends XRecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
-        Glide.with(mContext).load(mDaoNews.get(position).getImage()).into(holder1.mIv);
+        List<SheZhi> sheZhis = SheZhiku.getInsh().selectAll();
+        if (sheZhis.get(0).getIsWutu()) {
+            Glide.with(mContext).load(mDaoNews.get(position).getImage()).into(holder1.mIv);
+        }
         holder1.mTv.setText(mDaoNews.get(position).getTitle());
-        holder1.mTv2.setText("来自："+mDaoNews.get(position).getFrom());
+        holder1.mTv2.setText("来自：" + mDaoNews.get(position).getFrom());
         holder1.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null){
+                if (mListener != null) {
                     mListener.OnItemListener(mDaoNews.get(position));
                 }
             }
@@ -70,17 +75,17 @@ public class DaoAdapter extends XRecyclerView.Adapter{
 
     @Override
     public int getItemCount() {
-        if (mDaoNews == null){
+        if (mDaoNews == null) {
             return 0;
         }
         return mDaoNews.size();
     }
 
-    public interface OnItemListener{
+    public interface OnItemListener {
         void OnItemListener(DaoNews daoNews);
     }
 
-    public void setOnItemListener(OnItemListener listener){
+    public void setOnItemListener(OnItemListener listener) {
         mListener = listener;
     }
 }

@@ -12,7 +12,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:cardBackgroundColor="#fff"
+        app:cardBackgroundColor="@color/drawer_item_bg_n"
         app:cardElevation="2dp"
         app:cardCornerRadius="2dp"
         app:contentPadding="8dp">
@@ -26,6 +26,7 @@
                 android:layout_height="100dp" />
             <TextView
                 android:id="@+id/tv"
+                android:textColor="@color/comment_text"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content" />
         </LinearLayout>
