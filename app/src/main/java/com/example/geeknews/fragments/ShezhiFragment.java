@@ -121,7 +121,7 @@ public class ShezhiFragment extends SimpleFragment implements CompoundButton.OnC
                     MainActivity.mDelegate.setLocalNightMode(currentNightMode == Configuration.UI_MODE_NIGHT_NO ?
                             AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
                     // 同样需要调用recreate方法使之生效
-//                    getActivity().recreate();
+                    getActivity().recreate();
                 } else {
                     mSheZhi.setIsNight(false);
                     SheZhiku.getInsh().updata(mSheZhi);

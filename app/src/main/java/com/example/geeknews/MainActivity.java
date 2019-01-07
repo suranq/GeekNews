@@ -1,6 +1,7 @@
 package com.example.geeknews;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +27,8 @@ import com.example.geeknews.fragments.ZhihuFragment;
 import com.example.geeknews.shezhidao.SheZhi;
 import com.example.geeknews.shezhidao.SheZhiku;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +69,17 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
             edit1.putBoolean("isss", true);
             edit1.commit();
         }
+
+//        List<SheZhi> sheZhis = SheZhiku.getInsh().selectAll();
+//        if (sheZhis.get(0).getIsNight()) {
+//            int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+//            getDelegate().setLocalNightMode(currentNightMode == Configuration.UI_MODE_NIGHT_NO ?
+//                    AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+//            // 同样需要调用recreate方法使之生效
+//            recreate();
+//        }else {
+//
+//        }
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mViewsearch = findViewById(R.id.view_search);

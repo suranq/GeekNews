@@ -4,15 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
 import com.example.geeknews.R;
+import com.example.geeknews.activitys.weixin.zhihu.ZhihuActivity;
 import com.example.geeknews.beas.activity.SimpleActivity;
 import com.example.geeknews.greendao.DaoNews;
 import com.example.geeknews.greendao.GreenDaoHelep;
+import com.example.geeknews.utils.ShareUtil;
+import com.example.geeknews.utils.SystemUtil;
 
 import java.util.List;
 
@@ -55,10 +59,23 @@ public class WeixinActivity extends SimpleActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0,R.id.pager_image1,0,"复制链接到剪贴板");
+        menu.add(0,R.id.pager_image2,0,"分享链接");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.pager_image1:
+                SystemUtil.copyToClipBoard(WeixinActivity.this,mUrl);
+                break;
+            case R.id.pager_image2:
+                ShareUtil.shareText(WeixinActivity.this,mUrl,mTitle);
                 break;
         }
         return super.onOptionsItemSelected(item);

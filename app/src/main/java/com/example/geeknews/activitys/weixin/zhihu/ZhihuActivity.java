@@ -1,25 +1,25 @@
 package com.example.geeknews.activitys.weixin.zhihu;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.geeknews.R;
+import com.example.geeknews.activitys.weixin.WeixinActivity;
 import com.example.geeknews.api.ZhihuApi;
 import com.example.geeknews.beans.zhihu.DetailExtraBean;
 import com.example.geeknews.beans.zhihu.ZhihuDetailBean;
@@ -27,18 +27,14 @@ import com.example.geeknews.beas.activity.BaseActivity;
 import com.example.geeknews.greendao.DaoNews;
 import com.example.geeknews.greendao.GreenDaoHelep;
 import com.example.geeknews.presenter.ZhihuPresenter;
+import com.example.geeknews.utils.HtmlUtil;
+import com.example.geeknews.utils.ShareUtil;
+import com.example.geeknews.utils.SystemUtil;
 import com.example.geeknews.view.ZhihuView;
 import com.google.gson.Gson;
-
 import org.greenrobot.eventbus.EventBus;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresenter<ZhihuView<String>>> implements ZhihuView<String> {
@@ -52,8 +48,6 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
     CollapsingToolbarLayout mClpToolbar;
     @BindView(R.id.app_bar)
     AppBarLayout mAppBar;
-    @BindView(R.id.view_main)
-    TextView mViewMain;
     @BindView(R.id.nsv_scroller)
     NestedScrollView mNsvScroller;
     @BindView(R.id.tv_detail_bottom_like)
@@ -68,10 +62,11 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
     FloatingActionButton mFabLike;
     @BindView(R.id.detail_bar_image)
     ImageView mDetailBarImage;
+    @BindView(R.id.view_main)
+    WebView mViewMain;
 
     private boolean isBottomShow = true;
     private ZhihuDetailBean mZhihuDetailBean;
-    private boolean isShow;
     private int mXiangqing;
     private String From = "知乎";
 
@@ -101,8 +96,8 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
             }
         });
         presenter.getZhihu("", mXiangqing, ZhihuApi.EWAIXINXI);
-
     }
+
 
     @Override
     protected int createLayoutId() {
@@ -128,6 +123,12 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
                 }
                 finish();
                 break;
+            case R.id.pager_image1:
+                SystemUtil.copyToClipBoard(ZhihuActivity.this,mZhihuDetailBean.getShare_url());
+                break;
+            case R.id.pager_image2:
+                ShareUtil.shareText(ZhihuActivity.this,mZhihuDetailBean.getShare_url(),mZhihuDetailBean.getTitle());
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -147,7 +148,8 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
                 ActionBar actionBar = getSupportActionBar();
                 actionBar.setDisplayHomeAsUpEnabled(true);
 
-                get(mZhihuDetailBean);
+                String htmlData = HtmlUtil.createHtmlData(mZhihuDetailBean.getBody(),mZhihuDetailBean.getCss(),mZhihuDetailBean.getJs());
+                mViewMain.loadData(htmlData, HtmlUtil.MIME_TYPE, HtmlUtil.ENCODING);
                 break;
             case EWAIXINXI:
                 final DetailExtraBean detailExtraBean = gson.fromJson(s, DetailExtraBean.class);
@@ -168,41 +170,6 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
         }
     }
 
-    public void get(final ZhihuDetailBean zhihuDetailBean) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Html.ImageGetter imageGetter = new Html.ImageGetter() {
-                    private URL mUrl;
-
-                    @Override
-                    public Drawable getDrawable(String source) {
-                        Drawable drawable = null;
-                        try {
-                            mUrl = new URL(source);
-                            drawable = Drawable.createFromStream(mUrl.openStream(), "jpg");
-
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            return null;
-                        }
-                        drawable.setBounds(0, 0, 200, 200);
-                        return drawable;
-                    }
-                };
-                final CharSequence spanned = Html.fromHtml(zhihuDetailBean.getBody(), imageGetter, null);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mViewMain.setText(spanned);
-                    }
-                });
-            }
-        }).start();
-    }
-
     @Override
     public void showError(String error) {
 
@@ -215,8 +182,11 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0,R.id.pager_image1,0,"复制链接到剪贴板");
+        menu.add(0,R.id.pager_image2,0,"分享链接");
         return super.onCreateOptionsMenu(menu);
     }
+
 
 
     @OnClick(R.id.fab_like)
@@ -228,7 +198,7 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
                 GreenDaoHelep.getInsh().delect(daoNews.get(i));
             }
         } else {
-            DaoNews daoNews = new DaoNews(null, mZhihuDetailBean.getId(), mZhihuDetailBean.getImage(), mZhihuDetailBean.getTitle(), mZhihuDetailBean.getShare_url(), 0, null, true,From);
+            DaoNews daoNews = new DaoNews(null, mZhihuDetailBean.getId(), mZhihuDetailBean.getImage(), mZhihuDetailBean.getTitle(), mZhihuDetailBean.getShare_url(), 0, null, true, From);
             mFabLike.setSelected(true);
             GreenDaoHelep.getInsh().insert(daoNews);
         }

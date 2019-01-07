@@ -195,7 +195,7 @@ public class ACache {
     /**
      * 保存 String数据 到 缓存中
      *
-     * @param key 保存的key
+     * @param key 保存的key1
      * @param value 保存的String数据
      * @param saveTime 保存的时间，单位：秒
      */
