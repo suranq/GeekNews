@@ -59,7 +59,7 @@ public class FuliFragment extends BaseFragment<GanhuoView<String>, GanhuoPresent
 
     @Override
     protected void initData() {
-        presenter.getGanhuo(mTech,mPage, GanhuoApi.JISHU);
+        presenter.getGanhuo("",mTech,mPage, GanhuoApi.JISHU);
 
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mXrlv.setLayoutManager(manager);
@@ -114,14 +114,14 @@ public class FuliFragment extends BaseFragment<GanhuoView<String>, GanhuoPresent
     @Override
     public void onRefresh() {
         mPage =1;
-        presenter.getGanhuo(mTech,mPage,GanhuoApi.JISHU);
+        presenter.getGanhuo("",mTech,mPage,GanhuoApi.JISHU);
         mXrlv.refreshComplete();
     }
 
     @Override
     public void onLoadMore() {
         mPage++;
-        presenter.getGanhuo(mTech,mPage,GanhuoApi.JISHU);
+        presenter.getGanhuo("",mTech,mPage,GanhuoApi.JISHU);
         mXrlv.loadMoreComplete();
     }
 }

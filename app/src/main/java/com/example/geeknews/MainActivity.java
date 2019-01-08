@@ -1,9 +1,11 @@
 package com.example.geeknews;
 
+import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -55,6 +57,13 @@ public class MainActivity extends SimpleActivity implements NavigationView.OnNav
     //public static  MaterialSearchView mViewSearch;
     @Override
     protected void initData() {
+
+//        ActivityCompat.requestPermissions(this,new String[]{
+//                Manifest.permission.ACCESS_FINE_LOCATION,
+//                Manifest.permission.READ_EXTERNAL_STORAGE,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                Manifest.permission.ACCESS_COARSE_LOCATION},1);
+
         SharedPreferences preferences = getSharedPreferences("shezhi", 0);
         SharedPreferences.Editor edit = preferences.edit();
         edit.commit();

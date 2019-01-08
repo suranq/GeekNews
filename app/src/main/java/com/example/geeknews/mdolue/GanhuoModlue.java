@@ -17,7 +17,7 @@ public class GanhuoModlue {
         void setGanhuo(T t, GanhuoApi ganhuoApi);
     }
 
-    public void getGanhuo(String tech,int page, final GanhuoCallback ganhuoCallback, final GanhuoApi ganhuoApi){
+    public void getGanhuo(String query,String tech,int page, final GanhuoCallback ganhuoCallback, final GanhuoApi ganhuoApi){
         ganhuoCallback.setShowProgressbar();
         switch (ganhuoApi) {
             case JISHU:
@@ -33,6 +33,14 @@ public class GanhuoModlue {
                     @Override
                     public void onNext(String value) {
                         ganhuoCallback.setGanhuo(value,ganhuoApi);
+                    }
+                });
+                break;
+            case SOUSUO:
+                GanhuoManager.getGanhuoServer().getSou(query,tech).compose(RxUtils.<String>rxObserableSchedulerHelper()).subscribe(new BaseObserver<String>(ganhuoCallback) {
+                    @Override
+                    public void onNext(String s) {
+                        ganhuoCallback.setGanhuo(s,ganhuoApi);
                     }
                 });
                 break;

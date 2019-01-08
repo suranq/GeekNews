@@ -15,9 +15,9 @@ public class GanhuoPresenter<V extends GanhuoView> extends IBasePresenter<V> imp
 
     private GanhuoModlue mGanhuoModlue = new GanhuoModlue();
 
-    public void getGanhuo(String tech,int page, GanhuoApi ganhuoApi) {
+    public void getGanhuo(String query,String tech,int page, GanhuoApi ganhuoApi) {
         if (mView != null) {
-            mGanhuoModlue.getGanhuo(tech,page,this, ganhuoApi);
+            mGanhuoModlue.getGanhuo(query,tech,page,this, ganhuoApi);
         }
     }
 
@@ -44,6 +44,9 @@ public class GanhuoPresenter<V extends GanhuoView> extends IBasePresenter<V> imp
                     mView.show(o,ganhuoApi);
                     break;
                 case SUIJIMEIZI:
+                    mView.show(o,ganhuoApi);
+                    break;
+                case SOUSUO:
                     mView.show(o,ganhuoApi);
                     break;
             }

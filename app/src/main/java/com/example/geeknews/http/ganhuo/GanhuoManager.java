@@ -25,13 +25,16 @@ public class GanhuoManager {
         return sGanhuoServer;
     }
 
-    public Observable<String> getGanhuo(String tech,int page,GanhuoApi ganhuoApi){
+    public Observable<String> getGanhuo(String query,String tech,int page,GanhuoApi ganhuoApi){
         switch (ganhuoApi) {
             case JISHU:
                 sGanhuoServer.getJishu(tech,page);
                 break;
             case SUIJIMEIZI:
                 sGanhuoServer.getSui();
+                break;
+            case SOUSUO:
+                sGanhuoServer.getSou(query,tech);
                 break;
         }
         return null;

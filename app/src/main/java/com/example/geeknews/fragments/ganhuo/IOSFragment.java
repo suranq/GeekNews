@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.geeknews.MainActivity;
 import com.example.geeknews.R;
 import com.example.geeknews.activitys.weixin.WeixinActivity;
 import com.example.geeknews.adapters.ganhuo.MyAndroidAdapter;
@@ -29,6 +30,7 @@ import com.example.geeknews.shezhidao.SheZhiku;
 import com.example.geeknews.view.GanhuoView;
 import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,18 +74,30 @@ public class IOSFragment extends BaseFragment<GanhuoView<String>, GanhuoPresente
 
     @Override
     protected void load() {
+        MainActivity.mViewsearch.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.e("iiiiiiiii",query);
+                presenter.getGanhuo(query,mTech,0,GanhuoApi.SOUSUO);
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     @Override
     protected void initData() {
-        presenter.getGanhuo(mTech, mPage, GanhuoApi.JISHU);
-        presenter.getGanhuo("福利", 1, GanhuoApi.SUIJIMEIZI);
+        presenter.getGanhuo("",mTech, mPage, GanhuoApi.JISHU);
+        presenter.getGanhuo("","福利", 1, GanhuoApi.SUIJIMEIZI);
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mXrlv.setLayoutManager(manager);
         mXrlv.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
-        mMyAndroidAdapter = new MyAndroidAdapter(mData, getContext());
+        mMyAndroidAdapter = new MyAndroidAdapter(mData, getContext(),mTech);
         mXrlv.setAdapter(mMyAndroidAdapter);
         mXrlv.setLoadingListener(this);
 
@@ -124,6 +138,10 @@ public class IOSFragment extends BaseFragment<GanhuoView<String>, GanhuoPresente
                 }
                 mTvTechCopyright.setText("by:" + ganAndroid1.getResults().get(0).getWho());
                 break;
+            case SOUSUO:
+                GanAndroid ganAndroid2 = gson.fromJson(s, GanAndroid.class);
+                mMyAndroidAdapter.setData(ganAndroid2.getResults(),mPage);
+                break;
         }
     }
 
@@ -140,14 +158,14 @@ public class IOSFragment extends BaseFragment<GanhuoView<String>, GanhuoPresente
     @Override
     public void onRefresh() {
         mPage = 1;
-        presenter.getGanhuo(mTech, mPage, GanhuoApi.JISHU);
+        presenter.getGanhuo("",mTech, mPage, GanhuoApi.JISHU);
         mXrlv.refreshComplete();
     }
 
     @Override
     public void onLoadMore() {
         mPage++;
-        presenter.getGanhuo(mTech, mPage, GanhuoApi.JISHU);
+        presenter.getGanhuo("",mTech, mPage, GanhuoApi.JISHU);
         mXrlv.loadMoreComplete();
     }
 }

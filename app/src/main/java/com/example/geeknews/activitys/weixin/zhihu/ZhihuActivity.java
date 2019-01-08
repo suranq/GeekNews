@@ -30,6 +30,7 @@ import com.example.geeknews.presenter.ZhihuPresenter;
 import com.example.geeknews.utils.HtmlUtil;
 import com.example.geeknews.utils.ShareUtil;
 import com.example.geeknews.utils.SystemUtil;
+import com.example.geeknews.utils.ToastUtil;
 import com.example.geeknews.view.ZhihuView;
 import com.google.gson.Gson;
 import org.greenrobot.eventbus.EventBus;
@@ -96,6 +97,12 @@ public class ZhihuActivity extends BaseActivity<ZhihuView<String>, ZhihuPresente
             }
         });
         presenter.getZhihu("", mXiangqing, ZhihuApi.EWAIXINXI);
+        mTvDetailBottomLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtil.shortShow("点赞成功");
+            }
+        });
     }
 
 

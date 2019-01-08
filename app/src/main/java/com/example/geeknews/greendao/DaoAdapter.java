@@ -44,7 +44,7 @@ public class DaoAdapter extends XRecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
         List<SheZhi> sheZhis = SheZhiku.getInsh().selectAll();
-        if (sheZhis.get(0).getIsWutu()) {
+        if (!sheZhis.get(0).getIsWutu()) {
             Glide.with(mContext).load(mDaoNews.get(position).getImage()).into(holder1.mIv);
         }
         holder1.mTv.setText(mDaoNews.get(position).getTitle());

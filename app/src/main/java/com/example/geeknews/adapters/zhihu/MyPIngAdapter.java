@@ -3,6 +3,7 @@ package com.example.geeknews.adapters.zhihu;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,7 @@ public class MyPIngAdapter extends XRecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        MyViewHolder holder1 = (MyViewHolder) holder;
+        final MyViewHolder holder1 = (MyViewHolder) holder;
         RequestOptions requestOptions = new RequestOptions().circleCrop();
 
         Glide.with(mContext).load(mData.get(position).getAvatar()).apply(requestOptions).into(holder1.mCiv_comment_face);
@@ -62,6 +63,32 @@ public class MyPIngAdapter extends XRecyclerView.Adapter{
         if (mData.get(position).getReply_to() != null && mData.get(position).getReply_to().getId() != 0){
             String hui = "@"+mData.get(position).getReply_to().getAuthor()+":"+mData.get(position).getReply_to().getContent();
             holder1.mTv_comment_reply.setText(hui);
+            if (mData.get(position).getReply_to().getExpandState() == Weizhi){
+                holder1.mTv_comment_reply.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (holder1.mTv_comment_reply.getLineCount()>ErHang){
+                            holder1.mTv_comment_reply.setMaxLines(ErHang);
+                            holder1.mTv_comment_expand.setVisibility(View.VISIBLE);
+                            holder1.mTv_comment_expand.setText("展开");
+                            mData.get(holder1.getAdapterPosition()).getReply_to().setExpandState(YiShow);
+                            holder1.mTv_comment_expand.setOnClickListener(new OnStateClickListener(holder1.getAdapterPosition(),holder1.mTv_comment_reply));
+                        }else {
+                            holder1.mTv_comment_expand.setVisibility(View.GONE);
+                            mData.get(holder1.getAdapterPosition()).getReply_to().setExpandState(Wuxu);
+                        }
+                    }
+                });
+            }else if (mData.get(position).getReply_to().getExpandState() == Wuxu){
+                holder1.mTv_comment_expand.setVisibility(View.GONE);
+            }else if (mData.get(position).getReply_to().getExpandState() == YiZhan){
+                holder1.mTv_comment_reply.setMaxLines(Integer.MAX_VALUE);
+                holder1.mTv_comment_expand.setText("收起");
+                holder1.mTv_comment_expand.setVisibility(View.VISIBLE);
+                holder1.mTv_comment_expand.setOnClickListener(new OnStateClickListener(holder1.getAdapterPosition(),holder1.mTv_comment_reply));
+            }else {
+
+            }
         }
     }
 
@@ -73,6 +100,31 @@ public class MyPIngAdapter extends XRecyclerView.Adapter{
         return mData.size();
     }
 
+    private class OnStateClickListener implements View.OnClickListener{
+        private final int position;
+        private final TextView replyView;
+
+        public OnStateClickListener(int position, TextView replyView) {
+            this.position = position;
+            this.replyView = replyView;
+        }
+        @Override
+        public void onClick(View v) {
+            TextView tv = (TextView) v;
+            if (mData.get(position).getReply_to().getExpandState() == YiShow){
+                tv.setText("收缩");
+                replyView.setMaxLines(Integer.MAX_VALUE);
+                replyView.setEllipsize(null);
+                mData.get(position).getReply_to().setExpandState(YiZhan);
+            }else {
+                tv.setText("展开");
+                replyView.setMaxLines(ErHang);
+                replyView.setEllipsize(TextUtils.TruncateAt.END);
+                mData.get(position).getReply_to().setExpandState(YiShow);
+            }
+        }
+    }
+
     class MyViewHolder extends XRecyclerView.ViewHolder {
 
         private final ImageView mCiv_comment_face;
@@ -81,6 +133,7 @@ public class MyPIngAdapter extends XRecyclerView.Adapter{
         private final TextView mTv_comment_reply;
         private final TextView mTv_comment_time;
         private final TextView mTv_comment_like;
+        private final TextView mTv_comment_expand;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -90,6 +143,7 @@ public class MyPIngAdapter extends XRecyclerView.Adapter{
             mTv_comment_reply = itemView.findViewById(R.id.tv_comment_reply);
             mTv_comment_time = itemView.findViewById(R.id.tv_comment_time);
             mTv_comment_like = itemView.findViewById(R.id.tv_comment_like);
+            mTv_comment_expand = itemView.findViewById(R.id.tv_comment_expand);
 
         }
     }

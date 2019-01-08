@@ -14,30 +14,37 @@ public interface GanhuoServer {
 
     String HOST = "http://gank.io/api/";
 //
+
     /**
      * 技术文章列表
      */
     @GET("data/{tech}/10/{page}")
-    Observable<String>getJishu(@Path("tech")String tech,@Path("page")int page);
+    Observable<String> getJishu(@Path("tech") String tech, @Path("page") int page);
 
     /**
      * 妹纸列表
      */
     @GET("data/福利/20/{page}")
-    Observable<String>getMeizi(@Path("page")int page);
+    Observable<String> getMeizi(@Path("page") int page);
 
 //
+
     /**
      * 随机妹纸图
      */
     @GET("random/data/福利/10")
-    Observable<String>getSui();
+    Observable<String> getSui();
 //
 //    /**
 //     * 搜索
 //     */
+//    https://gank.io/api/search/query/%E5%95%8A%E5%93%88%E5%93%88/category/Android/count/10/page/1
 //    @GET("search/query/{query}/category/{type}/count/{count}/page/{page}")
 //    Flowable<GankHttpResponse<List<GankSearchItemBean>>> getSearchList(@Path("query") String query, @Path("type") String type, @Path("count") int num, @Path("page") int page);
-
-
+//    Observable<String>
+    /**
+     * 搜索
+     */
+    @GET("search/query/{query}/category/{type}/count/10/page/1")
+    Observable<String>getSou(@Path("query")String query,@Path("type")String type);
 }

@@ -24,9 +24,9 @@ public class MyAndroidAdapter extends XRecyclerView.Adapter{
     private List<GanAndroid.ResultsBean> mData;
     private final Context mContext;
     private OnItemListener mListener;
-
-    public MyAndroidAdapter(List<GanAndroid.ResultsBean> data, Context context) {
-
+    private String mTech;
+    public MyAndroidAdapter(List<GanAndroid.ResultsBean> data, Context context,String tech) {
+        mTech = tech;
         mData = data;
         mContext = context;
     }
@@ -42,6 +42,13 @@ public class MyAndroidAdapter extends XRecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder holder1 = (MyViewHolder) holder;
+        if (mTech.equals("Android")){
+            Glide.with(mContext).load(R.mipmap.ic_android).into(holder1.mIv);
+        }else if (mTech.equals("iOS")){
+            Glide.with(mContext).load(R.mipmap.ic_ios).into(holder1.mIv);
+        }else {
+            Glide.with(mContext).load(R.mipmap.ic_web).into(holder1.mIv);
+        }
         holder1.mTv1.setText(mData.get(position).getDesc());
         holder1.mTv2.setText(mData.get(position).getWho());
         holder1.mTv3.setText(mData.get(position).getPublishedAt());

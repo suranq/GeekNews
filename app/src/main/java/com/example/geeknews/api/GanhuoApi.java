@@ -10,6 +10,6 @@ public enum GanhuoApi {
 
     SUIJIMEIZI,
 
-
+    SOUSUO
 
 }
